@@ -7,7 +7,7 @@ namespace EmployeeSkillManager.Data.Models
     {
         [Key]
         [ForeignKey("User")]
-        public Guid Id { get; set; }
+        public string Id { get; set; }
         public User User { get; set; }
         public string Gender { get; set; }
         public Guid CreatedBy { get; set; }

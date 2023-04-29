@@ -6,7 +6,7 @@ namespace EmployeeSkillManager.Data.Models
     public class EmployeeSkill
     {
         [ForeignKey("User")]
-        public Guid EmployeeId { get; set; }
+        public string EmployeeId { get; set; }
         [ForeignKey("Skill")]
         public int SkillId { get; set; }
         [Required]
