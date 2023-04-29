@@ -1,4 +1,4 @@
-namespace EmployeeSkillManager
+namespace EmployeeSkillManager.WebAPI
 {
     public class WeatherForecast
     {
