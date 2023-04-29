@@ -1,4 +1,6 @@
 using EmployeeSkillManager.Data.Context;
+using EmployeeSkillManager.Data.Models;
+using EmployeeSkillManager.Services.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -19,9 +21,12 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("Connection"));
 });
 
-builder.Services.AddIdentity<IdentityUser, IdentityRole>()
-    .AddEntityFrameworkStores<ApplicationDbContext>()
-    .AddDefaultTokenProviders();
+builder.Services.AddScoped<IAdminService, AdminService>();
+builder.Services.AddScoped<IEmployeeService, EmployeeService>();
+
+builder.Services.AddIdentity<User, IdentityRole>()
+                .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddDefaultTokenProviders();
 
 builder.Services.AddCors(o => o.AddPolicy("ReactPolicy", builder =>
 {

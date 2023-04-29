@@ -10,8 +10,8 @@ namespace EmployeeSkillManager.Data.Models
         public string Id { get; set; }
         public User User { get; set; }
         public string Gender { get; set; }
-        public Guid CreatedBy { get; set; }
-        public int isActive { get; set; }
+        public string? CreatedBy { get; set; }
+        public int IsActive { get; set; }
         public ICollection<Skill> Skills { get; set; }
         public ICollection<EmployeeSkill> EmployeeSkills { get; }
     }

@@ -2,39 +2,34 @@
 using EmployeeSkillManager.Data.DTOs;
 using EmployeeSkillManager.Data.Models;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-
-namespace EmployeeSkillManager.WebAPI.Controllers
+namespace EmployeeSkillManager.Services.Interfaces
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class AuthController : ControllerBase
+    public interface IAdminService
+    {
+        Task<string> RegisterAdmin(UserRegistrationDTO inputModel);
+    }
+    public class AdminService : IAdminService
     {
         private readonly UserManager<User> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IConfiguration _configuration;
-
-        public AuthController(UserManager<User> userManager, RoleManager<IdentityRole> roleManager, IConfiguration configuration)
+        public AdminService(UserManager<User> userManager, RoleManager<IdentityRole> roleManager, IConfiguration configuration)
         {
             _userManager = userManager;
             _roleManager = roleManager;
             _configuration = configuration;
         }
 
-        [HttpPost]
-        [Route("RegisterAdmin")]
-        public async Task<IActionResult> RegisterAdmin([FromBody] UserRegistrationDTO inputModel)
+        public async Task<string> RegisterAdmin(UserRegistrationDTO inputModel)
         {
-            var userExists = await _userManager.FindByNameAsync(inputModel.Username);
+            User userExists = await _userManager.FindByNameAsync(inputModel.Username);
             if (userExists != null)
             {
-                Response userExistsResponse = new Response 
-                    (StatusCodes.Status400BadRequest, ConstantMessages.UserAlreadyExists, ConstantMessages.UserAlreadyExists);
-                return BadRequest(userExistsResponse);
+                return "0";
             }
-                 
+
             User user = new()
             {
                 FirstName = inputModel.FirstName,
@@ -50,10 +45,8 @@ namespace EmployeeSkillManager.WebAPI.Controllers
 
             if (!result.Succeeded)
             {
-                Response failedResponse = new Response
-                    (StatusCodes.Status400BadRequest, ConstantMessages.UserCreationFailed, ConstantMessages.UserCreationFailed);
-                return BadRequest(failedResponse);
-            }   
+                return "-1";
+            }
 
             if (!await _roleManager.RoleExistsAsync(UserRoles.Admin))
             {
@@ -65,9 +58,28 @@ namespace EmployeeSkillManager.WebAPI.Controllers
                 await _userManager.AddToRoleAsync(user, UserRoles.Admin);
             }
 
-            Response response = new Response
-                    (StatusCodes.Status200OK, ConstantMessages.UserCreated, _userManager.GetUserIdAsync(user));
-            return Ok(response);
+            return user.Id;
         }
+        //public Admin AddManager(ManagerDTO matter)
+        //{
+        //    try
+        //    {
+        //        var newManager = new Manager
+        //        {
+        //            Id = matter.Id,
+        //            Bio = matter.Bio,
+        //            User = matter.User,
+        //        };
+        //        _dbContext.Managers.Add(newManager);
+        //        _dbContext.SaveChanges();
+
+        //        return newManager;
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        return null;
+        //    }
+
+        //}
     }
 }
