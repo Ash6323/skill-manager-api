@@ -12,9 +12,10 @@
 
         public static string UserNotFound = "User does not Exist";
         public static string SkillNotFound = "Skill does not Exist";
+        public static string ErrorOccurred = "An Error Occurred during the Operation";
 
         public static string MatterDoesNotExist = "Matter with this ID does not Exist";
-        public static string MatterAlreadyExists = "Matter with the same ID already Exists";
+
         public static string ClientDoesNotExist = "Client with this ID does not Exist";
         public static string ClientAlreadyExists = "Client with the same ID already Exists";
         public static string NoMatchingJurisdiction = "This Attorney is invalid for this Matter's Jurisdiction";

@@ -1,0 +1,54 @@
+﻿using EmployeeSkillManager.Data.Context;
+using EmployeeSkillManager.Data.DTOs;
+using EmployeeSkillManager.Data.Mappers;
+using EmployeeSkillManager.Data.Models;
+using Microsoft.EntityFrameworkCore;
+using System.Linq;
+
+namespace EmployeeSkillManager.Services.Interfaces
+{
+    public interface IEmployeeSkillService
+    {
+        List<EmployeeSkillDTO> GetAllEmployeeSkills();
+        int AddEmployeeSkill(EmployeeAddSkillDTO employeeSkill);
+    }
+    public class EmployeeSkillService : IEmployeeSkillService
+    {
+        private ApplicationDbContext _context;
+        public EmployeeSkillService(ApplicationDbContext newContext)
+        {
+            _context = newContext;
+        }
+        public List<EmployeeSkillDTO> GetAllEmployeeSkills()
+        {
+            List<EmployeeSkill> employeeSkills = _context.EmployeeSkills.Include(e => e.Skill).ToList();
+            List<SkillDTO> skills = employeeSkills.Select(s => new EmployeeSkillMapper().Map(s)).ToList();
+
+            List<EmployeeSkillDTO> allEmployeeSkills = (from e in _context.EmployeeSkills
+                                          where e.Employee.IsActive.Equals(1) && e.Skill.isActive.Equals(1)
+                                          select new EmployeeSkillDTO()
+                                          {
+                                              EmployeeId = e.Employee.Id,
+                                              EmployeeName = e.Employee.User.FullName,
+                                              EmployeeSkills = skills,
+                                          }).Distinct().ToList();
+            return allEmployeeSkills;
+        }
+        public int AddEmployeeSkill(EmployeeAddSkillDTO employeeSkill)
+        {
+            EmployeeSkill newEmployeeSkill = new EmployeeSkill();
+            {
+                newEmployeeSkill.EmployeeId = employeeSkill.EmployeeId;
+                newEmployeeSkill.SkillId = employeeSkill.SkillId;
+                //newEmployeeSkill.Skill.SkillName = _context.Skills
+                //                                   .Select(x => x.SkillName)
+                //                                   .Where(s => s.Id.Equals(employeeSkill.EmployeeSkill.Id));
+                newEmployeeSkill.Expertise = employeeSkill.Expertise;
+                newEmployeeSkill.AddedAt = DateTime.Now;
+            };
+            _context.EmployeeSkills.Add(newEmployeeSkill);
+            _context.SaveChanges();
+            return 1;
+        }
+    }
+}

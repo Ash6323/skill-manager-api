@@ -11,6 +11,8 @@ namespace EmployeeSkillManager.Data.Models
         public int SkillId { get; set; }
         [Required]
         public string Expertise { get; set; }
+        public DateTime AddedAt { get; set; }
+        public DateTime? RemovedAt { get; set; }
         public Employee Employee { get; set; } = null!;
         public Skill Skill { get; set; } = null!;
     }
