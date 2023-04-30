@@ -1,8 +1,10 @@
 ﻿using EmployeeSkillManager.Data.Constants;
 using EmployeeSkillManager.Data.Context;
 using EmployeeSkillManager.Data.DTOs;
+using EmployeeSkillManager.Data.Mappers;
 using EmployeeSkillManager.Data.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
 namespace EmployeeSkillManager.Services.Interfaces
@@ -10,6 +12,8 @@ namespace EmployeeSkillManager.Services.Interfaces
     public interface IEmployeeService
     {
         Task<string> RegisterEmployee(UserRegistrationDTO inputModel);
+        List<EmployeeDTO> GetEmployees();
+        EmployeeDTO GetEmployee(string id);
     }
     public class EmployeeService : IEmployeeService
     {
@@ -26,6 +30,21 @@ namespace EmployeeSkillManager.Services.Interfaces
             _dbContext = dbContext;
         }
 
+        public EmployeeDTO GetEmployee(string id)
+        {
+            Employee result = _dbContext.Employees.Include(e => e.User).FirstOrDefault(e => e.Id.Equals(id));
+            if (result != null)
+            {
+                EmployeeDTO employee = new EmployeeMapper().Map(result);
+                return employee;
+            }
+            return null;
+        }
+        public List<EmployeeDTO> GetEmployees()
+        {
+            List<Employee> employees = _dbContext.Employees.Include(c => c.User).ToList();
+            return employees.Select(e => new EmployeeMapper().Map(e)).ToList();
+        }
         public async Task<string> RegisterEmployee(UserRegistrationDTO inputModel)
         {
             User userExists = await _userManager.FindByNameAsync(inputModel.Username);

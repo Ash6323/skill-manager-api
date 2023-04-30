@@ -10,7 +10,7 @@
         public static string UserCreationFailed = "User Creation Failed! Please Check User Details and Try Again.";
         public static string UserCreated = "User Creation Successful";
 
-        public static string AttorneyDoesNotExist = "Attorney with this ID does not Exist";
+        public static string UserNotFound = "User does not Exist";
 
         public static string MatterDoesNotExist = "Matter with this ID does not Exist";
         public static string MatterAlreadyExists = "Matter with the same ID already Exists";

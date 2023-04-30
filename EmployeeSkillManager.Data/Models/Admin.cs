@@ -7,5 +7,7 @@ namespace EmployeeSkillManager.Data.Models
         [ForeignKey("User")]
         public string Id { get; set; }
         public User User { get; set; }
+        public string Gender { get; set; }
+        public int IsActive { get; set; }
     }
 }

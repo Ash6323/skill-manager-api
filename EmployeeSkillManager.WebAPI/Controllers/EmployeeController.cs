@@ -16,8 +16,32 @@ namespace EmployeeSkillManager.WebAPI.Controllers
             _employeeService = employeeService;
         }
 
+        [HttpGet]
+        public IActionResult Get()
+        {
+            List<EmployeeDTO> result = _employeeService.GetEmployees();
+            if (result != null)
+            {
+                Response response = new
+                    Response(StatusCodes.Status200OK, ConstantMessages.DataRetrievedSuccessfully, result);
+                return Ok(response);
+            }
+            return NoContent();
+        }
+        [HttpGet("{id}")]
+        public IActionResult Get(string id)
+        {
+            EmployeeDTO result = _employeeService.GetEmployee(id);
+            if (result != null)
+            {
+                Response foundResponse = new(StatusCodes.Status200OK, ConstantMessages.DataRetrievedSuccessfully, result);
+                return Ok(foundResponse);
+            }
+            Response nullResponse = new(StatusCodes.Status404NotFound, ConstantMessages.UserNotFound, null);
+            return NotFound(nullResponse);
+        }
+
         [HttpPost]
-        [Route("RegisterEmployee")]
         public async Task<IActionResult> Post([FromBody] UserRegistrationDTO inputModel)
         {
             string result =  await _employeeService.RegisterEmployee(inputModel);
