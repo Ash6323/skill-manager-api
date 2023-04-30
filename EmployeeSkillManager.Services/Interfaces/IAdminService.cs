@@ -14,6 +14,8 @@ namespace EmployeeSkillManager.Services.Interfaces
         Task<string> RegisterAdmin(UserRegistrationDTO inputModel);
         List<AdminDTO> GetAdmins();
         AdminDTO GetAdmin(string id);
+        string UpdateAdmin(string id, AdminUpdateDTO updatedAdmin);
+        string DeleteAdmin(string id);
     }
     public class AdminService : IAdminService
     {
@@ -32,12 +34,12 @@ namespace EmployeeSkillManager.Services.Interfaces
 
         public List<AdminDTO> GetAdmins()
         {
-            List<Admin> admins = _dbContext.Admins.Include(a => a.User).ToList();
+            List<Admin> admins = _dbContext.Admins.Include(a => a.User).Where(e => e.IsActive.Equals(1)).ToList();
             return admins.Select(a => new AdminMapper().Map(a)).ToList();
         }
         public AdminDTO GetAdmin(string id)
         {
-            Admin result = _dbContext.Admins.Include(e => e.User).FirstOrDefault(e => e.Id.Equals(id));
+            Admin result = _dbContext.Admins.Include(e => e.User).FirstOrDefault(e => e.Id.Equals(id) && e.IsActive.Equals(1));
             if (result != null)
             {
                 AdminDTO admin = new AdminMapper().Map(result);
@@ -98,6 +100,61 @@ namespace EmployeeSkillManager.Services.Interfaces
             }
 
             return user.Id;
+        }
+        public string UpdateAdmin(string id, AdminUpdateDTO updatedAdmin)
+        {
+            Admin admin = _dbContext.Admins.Include(e => e.User).FirstOrDefault(e => e.Id.Equals(id));
+
+            if (admin != null)
+            {
+                if (string.IsNullOrEmpty(updatedAdmin.UserName))
+                    updatedAdmin.UserName = admin.User.UserName;
+
+                if (string.IsNullOrEmpty(updatedAdmin.FirstName))
+                    updatedAdmin.FirstName = admin.User.FirstName;
+
+                if (string.IsNullOrEmpty(updatedAdmin.LastName))
+                    updatedAdmin.LastName = admin.User.LastName;
+
+                if (string.IsNullOrEmpty(updatedAdmin.Email))
+                    updatedAdmin.Email = admin.User.Email;
+
+                if (string.IsNullOrEmpty(updatedAdmin.PhoneNumber))
+                    updatedAdmin.Email = admin.User.PhoneNumber;
+
+                if (string.IsNullOrEmpty(updatedAdmin.ProfilePictureUrl))
+                    updatedAdmin.ProfilePictureUrl = null;
+
+                if (string.IsNullOrEmpty(updatedAdmin.Gender))
+                    updatedAdmin.ProfilePictureUrl = admin.Gender;
+
+                admin.User.UserName = updatedAdmin.UserName;
+                admin.User.FirstName = updatedAdmin.FirstName;
+                admin.User.LastName = updatedAdmin.LastName;
+                admin.User.Email = updatedAdmin.Email;
+                admin.User.PhoneNumber = updatedAdmin.PhoneNumber;
+                admin.User.ProfilePictureUrl = updatedAdmin.ProfilePictureUrl;
+                admin.Gender = updatedAdmin.Gender;
+                admin.User.UpdatedAt = DateTime.Now;
+                _dbContext.SaveChanges();
+                return admin.Id;
+            }
+            else
+                return "0";
+        }
+        public string DeleteAdmin(string id)
+        {
+            Admin admin = _dbContext.Admins.Include(a => a.User)
+                                                    .FirstOrDefault(a => a.Id.Equals(id) && a.IsActive.Equals(1));
+
+            if (admin != null)
+            {
+                admin.IsActive = 0;
+                _dbContext.SaveChanges();
+                return admin.User.Id;
+            }
+            else
+                return "0";
         }
     }
 }

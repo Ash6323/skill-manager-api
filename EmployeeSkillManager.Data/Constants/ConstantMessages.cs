@@ -11,6 +11,7 @@
         public static string UserCreated = "User Creation Successful";
 
         public static string UserNotFound = "User does not Exist";
+        public static string SkillNotFound = "Skill does not Exist";
 
         public static string MatterDoesNotExist = "Matter with this ID does not Exist";
         public static string MatterAlreadyExists = "Matter with the same ID already Exists";

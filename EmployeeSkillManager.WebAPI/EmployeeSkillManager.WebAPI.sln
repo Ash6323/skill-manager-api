@@ -5,9 +5,14 @@ VisualStudioVersion = 17.5.33530.505
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EmployeeSkillManager.WebAPI", "EmployeeSkillManager.WebAPI.csproj", "{4CCC973D-EAD5-46A0-84A9-8F31C81418F6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmployeeSkillManager.Data", "..\EmployeeSkillManager.Data\EmployeeSkillManager.Data.csproj", "{E293504D-0BA3-4468-A47E-00F310A8DCE6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EmployeeSkillManager.Data", "..\EmployeeSkillManager.Data\EmployeeSkillManager.Data.csproj", "{E293504D-0BA3-4468-A47E-00F310A8DCE6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmployeeSkillManager.Services", "..\EmployeeSkillManager.Services\EmployeeSkillManager.Services.csproj", "{55A2D4A6-769F-442A-BFC6-7CC6CB191D6B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EmployeeSkillManager.Services", "..\EmployeeSkillManager.Services\EmployeeSkillManager.Services.csproj", "{55A2D4A6-769F-442A-BFC6-7CC6CB191D6B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{E735A601-5A52-425B-A42A-8B994B254EAA}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

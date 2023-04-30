@@ -64,5 +64,37 @@ namespace EmployeeSkillManager.WebAPI.Controllers
                 return Ok(response);
             }
         }
+        [HttpPut("{id}")]
+        public IActionResult Put(string id, [FromBody] AdminUpdateDTO updatedAdmin)
+        {
+            string result = _adminService.UpdateAdmin(id, updatedAdmin);
+            if (result.Equals("0"))
+            {
+                Response response = new
+                    (StatusCodes.Status404NotFound, ConstantMessages.UserNotFound, ConstantMessages.UserNotFound);
+                return NotFound(response);
+            }
+            else
+            {
+                Response response = new(StatusCodes.Status200OK, ConstantMessages.DataUpdatedSuccessfully, result);
+                return Ok(response);
+            }
+        }
+        [HttpDelete("{id}")]
+        public IActionResult Delete(string id)
+        {
+            string result = _adminService.DeleteAdmin(id);
+            if (result.Equals("0"))
+            {
+                Response response =
+                    new(StatusCodes.Status400BadRequest, ConstantMessages.UserNotFound, null);
+                return BadRequest(response);
+            }
+            else
+            {
+                Response response = new(StatusCodes.Status200OK, ConstantMessages.DataDeletedSuccessfully, result);
+                return Ok(response);
+            }
+        }
     }
 }

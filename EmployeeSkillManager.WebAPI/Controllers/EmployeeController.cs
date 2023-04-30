@@ -28,6 +28,7 @@ namespace EmployeeSkillManager.WebAPI.Controllers
             }
             return NoContent();
         }
+
         [HttpGet("{id}")]
         public IActionResult Get(string id)
         {
@@ -61,6 +62,38 @@ namespace EmployeeSkillManager.WebAPI.Controllers
             else
             {
                 Response response = new Response(StatusCodes.Status200OK, ConstantMessages.UserCreated, result);
+                return Ok(response);
+            }
+        }
+        [HttpPut("{id}")]
+        public IActionResult Put(string id, [FromBody] EmployeeUpdateDTO updatedEmployee)
+        {
+            string result = _employeeService.UpdateEmployee(id, updatedEmployee);
+            if (result.Equals("0"))
+            {
+                Response response = new
+                    (StatusCodes.Status404NotFound, ConstantMessages.UserNotFound, ConstantMessages.UserNotFound);
+                return NotFound(response);
+            }
+            else
+            {
+                Response response = new(StatusCodes.Status200OK, ConstantMessages.DataUpdatedSuccessfully, result);
+                return Ok(response);
+            }
+        }
+        [HttpDelete("{id}")]
+        public IActionResult Delete(string id)
+        {
+            string result = _employeeService.DeleteEmployee(id);
+            if (result.Equals("0"))
+            {
+                Response response =
+                    new(StatusCodes.Status400BadRequest, ConstantMessages.UserNotFound, null);
+                return BadRequest(response);
+            }
+            else
+            {
+                Response response = new(StatusCodes.Status200OK, ConstantMessages.DataDeletedSuccessfully, result);
                 return Ok(response);
             }
         }
