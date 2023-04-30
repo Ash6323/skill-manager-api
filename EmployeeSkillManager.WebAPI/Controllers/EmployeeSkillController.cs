@@ -31,9 +31,16 @@ namespace EmployeeSkillManager.WebAPI.Controllers
 
         // GET api/<EmployeeSkillController>/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public IActionResult Get(string id)
         {
-            return "value";
+            EmployeeSkillDTO result = _employeeSkillService.GetEmployeeSkills(id);
+            if (result != null)
+            {
+                Response foundResponse = new(StatusCodes.Status200OK, ConstantMessages.DataRetrievedSuccessfully, result);
+                return Ok(foundResponse);
+            }
+            Response notFoundResponse = new(StatusCodes.Status404NotFound, ConstantMessages.SkillNotFound, null);
+            return NotFound(notFoundResponse);
         }
 
         // POST api/<EmployeeSkillController>

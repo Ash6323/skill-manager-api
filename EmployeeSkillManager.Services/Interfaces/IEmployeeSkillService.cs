@@ -10,6 +10,7 @@ namespace EmployeeSkillManager.Services.Interfaces
     public interface IEmployeeSkillService
     {
         List<EmployeeSkillDTO> GetAllEmployeeSkills();
+        EmployeeSkillDTO GetEmployeeSkills(string id);
         int AddEmployeeSkill(EmployeeAddSkillDTO employeeSkill);
     }
     public class EmployeeSkillService : IEmployeeSkillService
@@ -33,6 +34,21 @@ namespace EmployeeSkillManager.Services.Interfaces
                                               EmployeeSkills = skills,
                                           }).Distinct().ToList();
             return allEmployeeSkills;
+        }
+        public EmployeeSkillDTO GetEmployeeSkills(string id)
+        {
+            List<EmployeeSkill> employeeSkills = _context.EmployeeSkills.Include(e => e.Skill).ToList();
+            List<SkillDTO> skills = employeeSkills.Select(s => new EmployeeSkillMapper().Map(s)).ToList();
+
+            EmployeeSkillDTO employeeWithSkills = (from e in _context.EmployeeSkills
+                                                        where e.Employee.IsActive.Equals(1) && e.Skill.isActive.Equals(1)
+                                                        select new EmployeeSkillDTO()
+                                                        {
+                                                            EmployeeId = e.Employee.Id,
+                                                            EmployeeName = e.Employee.User.FullName,
+                                                            EmployeeSkills = skills,
+                                                        }).Distinct().FirstOrDefault(e => e.EmployeeId.Equals(id));
+            return employeeWithSkills;
         }
         public int AddEmployeeSkill(EmployeeAddSkillDTO employeeSkill)
         {
