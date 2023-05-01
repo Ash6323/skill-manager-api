@@ -66,6 +66,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseCors("ReactPolicy");
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
