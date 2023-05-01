@@ -65,7 +65,7 @@ namespace EmployeeSkillManager.Services.Interfaces
                 SecurityStamp = Guid.NewGuid().ToString(),
                 UserName = inputModel.Username,
                 CreatedAt = DateTime.Now,
-                UpdatedAt = DateTime.Now,
+                UpdatedAt = DateTime.Now
             };
             IdentityResult result = await _userManager.CreateAsync(user, inputModel.Password);
 
@@ -93,7 +93,7 @@ namespace EmployeeSkillManager.Services.Interfaces
                     IsActive = 1,
                 };
                 _dbContext.Employees.Add(newEmployee);
-                _dbContext.SaveChanges();
+                await _dbContext.SaveChangesAsync();
             }
             catch (Exception e)
             {

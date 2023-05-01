@@ -92,7 +92,7 @@ namespace EmployeeSkillManager.Services.Interfaces
                     IsActive = 1,
                 };
                 _dbContext.Admins.Add(newAdmin);
-                _dbContext.SaveChanges();
+                await _dbContext.SaveChangesAsync();
             }
             catch (Exception e)
             {

@@ -40,6 +40,7 @@ namespace EmployeeSkillManager.WebAPI.Controllers
             if (user != null && await _userManager.CheckPasswordAsync(user, loginModel.Password))
             {
                 IList<string> userRoles = await _userManager.GetRolesAsync(user);
+                string userRole = userRoles[0];
 
                 List<Claim> authClaims = new List<Claim>
                 {
@@ -47,9 +48,9 @@ namespace EmployeeSkillManager.WebAPI.Controllers
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 };
 
-                foreach (string userRole in userRoles)
+                foreach (string role in userRoles)
                 {
-                    authClaims.Add(new Claim(ClaimTypes.Role, userRole));
+                    authClaims.Add(new Claim(ClaimTypes.Role, role));
                 }
 
                 JwtSecurityToken token = GetToken(authClaims);
@@ -58,7 +59,7 @@ namespace EmployeeSkillManager.WebAPI.Controllers
                 {
                     token = new JwtSecurityTokenHandler().WriteToken(token),
                     expiration = token.ValidTo,
-                    role = userRoles,
+                    role = userRole,
                     userId = user.Id
                 });
             }
