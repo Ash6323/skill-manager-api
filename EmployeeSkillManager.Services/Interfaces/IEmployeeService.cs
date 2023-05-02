@@ -24,13 +24,11 @@ namespace EmployeeSkillManager.Services.Interfaces
         private readonly UserManager<User> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly ApplicationDbContext _dbContext;
-        private readonly IConfiguration _configuration;
         public EmployeeService(UserManager<User> userManager, RoleManager<IdentityRole> roleManager, 
-                                IConfiguration configuration, ApplicationDbContext dbContext)
+                                ApplicationDbContext dbContext)
         {
             _userManager = userManager;
             _roleManager = roleManager;
-            _configuration = configuration;
             _dbContext = dbContext;
         }
 
@@ -66,6 +64,11 @@ namespace EmployeeSkillManager.Services.Interfaces
                 Email = inputModel.Email,
                 SecurityStamp = Guid.NewGuid().ToString(),
                 UserName = inputModel.Username,
+                Address = inputModel.Address,
+                Zipcode = inputModel.Zipcode,
+                DateOfBirth = inputModel.DateOfBirth,
+                PreviousOrganisation = inputModel.PreviousOrganisation,
+                PreviousDesignation = inputModel.PreviousDesignation,
                 CreatedAt = DateTime.Now,
                 UpdatedAt = DateTime.Now
             };
@@ -129,12 +132,26 @@ namespace EmployeeSkillManager.Services.Interfaces
                 if (string.IsNullOrEmpty(updatedEmployee.Gender))
                     updatedEmployee.ProfilePictureUrl = employee.Gender;
 
+                if (string.IsNullOrEmpty(updatedEmployee.Address))
+                    updatedEmployee.Address = employee.User.Address;
+
+                if (string.IsNullOrEmpty(updatedEmployee.Zipcode))
+                    updatedEmployee.Zipcode = employee.User.Zipcode;
+
+                if (updatedEmployee.DateOfBirth == null)
+                    updatedEmployee.DateOfBirth = employee.User.DateOfBirth;
+
                 employee.User.FirstName = updatedEmployee.FirstName;
                 employee.User.LastName = updatedEmployee.LastName;
                 employee.User.Email = updatedEmployee.Email;
                 employee.User.PhoneNumber = updatedEmployee.PhoneNumber;
                 employee.User.ProfilePictureUrl = updatedEmployee.ProfilePictureUrl;
                 employee.Gender = updatedEmployee.Gender;
+                employee.User.Address = updatedEmployee.Address;
+                employee.User.Zipcode = updatedEmployee.Zipcode;
+                employee.User.DateOfBirth = updatedEmployee.DateOfBirth;
+                //employee.User.PreviousOrganisation = updatedEmployee.PreviousOrganisation;
+                //employee.User.PreviousDesignation = updatedEmployee.PreviousDesignation;
                 employee.User.UpdatedAt = DateTime.Now;
                 _dbContext.SaveChanges();
                 return employee.Id;

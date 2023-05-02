@@ -63,6 +63,11 @@ namespace EmployeeSkillManager.Services.Interfaces
                 Email = inputModel.Email,
                 SecurityStamp = Guid.NewGuid().ToString(),
                 UserName = inputModel.Username,
+                Address = inputModel.Address,
+                Zipcode = inputModel.Zipcode,
+                DateOfBirth = inputModel.DateOfBirth,
+                PreviousOrganisation = inputModel.PreviousOrganisation,
+                PreviousDesignation = inputModel.PreviousDesignation,
                 CreatedAt = DateTime.Now,
                 UpdatedAt = DateTime.Now,
             };
@@ -89,7 +94,7 @@ namespace EmployeeSkillManager.Services.Interfaces
                 {
                     Id = user.Id,
                     Gender = inputModel.Gender,
-                    IsActive = 1,
+                    IsActive = 1
                 };
                 _dbContext.Admins.Add(newAdmin);
                 await _dbContext.SaveChangesAsync();
@@ -120,13 +125,22 @@ namespace EmployeeSkillManager.Services.Interfaces
                     updatedAdmin.Email = admin.User.Email;
 
                 if (string.IsNullOrEmpty(updatedAdmin.PhoneNumber))
-                    updatedAdmin.Email = admin.User.PhoneNumber;
+                    updatedAdmin.PhoneNumber = admin.User.PhoneNumber;
 
                 if (string.IsNullOrEmpty(updatedAdmin.ProfilePictureUrl))
                     updatedAdmin.ProfilePictureUrl = null;
 
                 if (string.IsNullOrEmpty(updatedAdmin.Gender))
-                    updatedAdmin.ProfilePictureUrl = admin.Gender;
+                    updatedAdmin.Gender = admin.Gender;
+
+                if (string.IsNullOrEmpty(updatedAdmin.Address))
+                    updatedAdmin.Address = admin.User.Address;
+
+                if (string.IsNullOrEmpty(updatedAdmin.Zipcode))
+                    updatedAdmin.Zipcode = admin.User.Zipcode;
+
+                if (updatedAdmin.DateOfBirth == null)
+                    updatedAdmin.DateOfBirth = admin.User.DateOfBirth;
 
                 admin.User.UserName = updatedAdmin.UserName;
                 admin.User.FirstName = updatedAdmin.FirstName;
@@ -135,6 +149,11 @@ namespace EmployeeSkillManager.Services.Interfaces
                 admin.User.PhoneNumber = updatedAdmin.PhoneNumber;
                 admin.User.ProfilePictureUrl = updatedAdmin.ProfilePictureUrl;
                 admin.Gender = updatedAdmin.Gender;
+                admin.User.Address = updatedAdmin.Address;
+                admin.User.Zipcode = updatedAdmin.Zipcode;
+                admin.User.DateOfBirth = updatedAdmin.DateOfBirth;
+                //admin.User.PreviousOrganisation = updatedAdmin.PreviousOrganisation;
+                //admin.User.PreviousDesignation = updatedAdmin.PreviousDesignation;
                 admin.User.UpdatedAt = DateTime.Now;
                 _dbContext.SaveChanges();
                 return admin.Id;

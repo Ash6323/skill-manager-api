@@ -16,6 +16,11 @@ namespace EmployeeSkillManager.Data.Mappers
                 PhoneNumber = entity.User.PhoneNumber,
                 Email = entity.User.Email,
                 IsActive = entity.IsActive,
+                DateOfBirth = entity.User.DateOfBirth,
+                Address = entity.User.Address,
+                Zipcode = entity.User.Zipcode,
+                PreviousOrganisation = entity.User.PreviousOrganisation,
+                PreviousDesignation = entity.User.PreviousDesignation,
             };
         }
     }
