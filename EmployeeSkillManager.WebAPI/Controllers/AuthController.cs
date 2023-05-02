@@ -1,9 +1,7 @@
 ﻿using EmployeeSkillManager.Data.Models;
 using EmployeeSkillManager.Data.DTOs;
-using EmployeeSkillManager.Services.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -18,17 +16,11 @@ namespace EmployeeSkillManager.WebAPI.Controllers
         private readonly UserManager<User> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IConfiguration _configuration;
-
-        //private readonly IAdminService _adminService;
-        //private readonly IEmployeeService _employeeService;
-        public AuthController(UserManager<User> userManager, RoleManager<IdentityRole> roleManager, IConfiguration configuration,
-                                IAdminService adminService, IEmployeeService employeeService)
+        public AuthController(UserManager<User> userManager, RoleManager<IdentityRole> roleManager, IConfiguration configuration)
         {
             _userManager = userManager;
             _roleManager = roleManager;
             _configuration = configuration;
-            //_adminService = adminService;
-            //_employeeService = employeeService;
         }
 
         [HttpPost]

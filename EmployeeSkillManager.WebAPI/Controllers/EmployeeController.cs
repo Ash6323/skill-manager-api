@@ -1,5 +1,6 @@
 ﻿using EmployeeSkillManager.Data.Constants;
 using EmployeeSkillManager.Data.DTOs;
+using EmployeeSkillManager.Data.Enums;
 using EmployeeSkillManager.Data.Models;
 using EmployeeSkillManager.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -96,6 +97,18 @@ namespace EmployeeSkillManager.WebAPI.Controllers
                 Response response = new(StatusCodes.Status200OK, ConstantMessages.DataDeletedSuccessfully, result);
                 return Ok(response);
             }
+        }
+        [HttpGet("Gender")]
+        public IActionResult GetGender()
+        {
+            List<string> result = _employeeService.GetGenderEnum();
+            if (result != null)
+            {
+                Response response = new
+                    Response(StatusCodes.Status200OK, ConstantMessages.DataRetrievedSuccessfully, result);
+                return Ok(response);
+            }
+            return NoContent();
         }
     }
 }

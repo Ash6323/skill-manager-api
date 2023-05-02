@@ -1,6 +1,7 @@
 ﻿using EmployeeSkillManager.Data.Constants;
 using EmployeeSkillManager.Data.Context;
 using EmployeeSkillManager.Data.DTOs;
+using EmployeeSkillManager.Data.Enums;
 using EmployeeSkillManager.Data.Mappers;
 using EmployeeSkillManager.Data.Models;
 using Microsoft.AspNetCore.Identity;
@@ -16,6 +17,7 @@ namespace EmployeeSkillManager.Services.Interfaces
         EmployeeDTO GetEmployee(string id);
         string UpdateEmployee(string id, EmployeeUpdateDTO updatedEmployee);
         string DeleteEmployee(string id);
+        List<string> GetGenderEnum();
     }
     public class EmployeeService : IEmployeeService
     {
@@ -153,6 +155,16 @@ namespace EmployeeSkillManager.Services.Interfaces
             }
             else
                 return "0";
+        }
+        public List<string> GetGenderEnum()
+        {
+            List<string> genders = new List<string>();
+            foreach (var data in Enum.GetNames(typeof(Gender)))
+            {
+                string value = data.ToString();
+                genders.Add(value);
+            }
+            return genders;
         }
     }
 }
