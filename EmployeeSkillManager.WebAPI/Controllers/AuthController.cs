@@ -32,18 +32,20 @@ namespace EmployeeSkillManager.WebAPI.Controllers
             if (user != null && await _userManager.CheckPasswordAsync(user, loginModel.Password))
             {
                 IList<string> userRoles = await _userManager.GetRolesAsync(user);
-                string userRole = userRoles[0];
+                string userRole = userRoles.FirstOrDefault();                            //changes
 
                 List<Claim> authClaims = new List<Claim>
                 {
-                    new Claim(ClaimTypes.Name, user.UserName),
-                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                    new Claim(ClaimTypes.Name, user.UserName)
+                    //new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 };
 
-                foreach (string role in userRoles)
-                {
-                    authClaims.Add(new Claim(ClaimTypes.Role, role));
-                }
+                //Claim claim = new Claim(ClaimTypes.Name, user.UserName);
+
+                //foreach (string role in userRoles)
+                //{
+                //    authClaims.Add(new Claim(ClaimTypes.Role, role));
+                //}
 
                 JwtSecurityToken token = GetToken(authClaims);
 
@@ -58,7 +60,7 @@ namespace EmployeeSkillManager.WebAPI.Controllers
             return Unauthorized();
         }
 
-        private JwtSecurityToken GetToken(List<Claim> authClaims)
+        private JwtSecurityToken GetToken(List<Claim> authClaim)
         {
             var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JwtConfig:secret"]));
 
@@ -66,7 +68,7 @@ namespace EmployeeSkillManager.WebAPI.Controllers
                 issuer: _configuration["JwtConfig:validIssuer"],
                 audience: _configuration["JwtConfig:validAudience"],
                 expires: DateTime.Now.AddHours(1),
-                claims: authClaims,
+                claims: authClaim,
                 signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
                 );
 
