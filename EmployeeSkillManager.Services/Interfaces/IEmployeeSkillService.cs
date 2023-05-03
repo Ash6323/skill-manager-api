@@ -23,7 +23,7 @@ namespace EmployeeSkillManager.Services.Interfaces
         public List<EmployeeSkillDTO> GetAllEmployeeSkills()
         {
             List<EmployeeSkill> employeeSkills = _context.EmployeeSkills.Include(e => e.Skill).ToList();
-            List<SkillDTO> skills = employeeSkills.Select(s => new EmployeeSkillMapper().Map(s)).ToList();
+            List<SkillExpertiseDTO> skills = employeeSkills.Select(s => new EmployeeSkillMapper().Map(s)).ToList();
 
             List<EmployeeSkillDTO> allEmployeeSkills = (from e in _context.EmployeeSkills
                                           where e.Employee.IsActive.Equals(1) && e.Skill.isActive.Equals(1)
@@ -38,7 +38,7 @@ namespace EmployeeSkillManager.Services.Interfaces
         public EmployeeSkillDTO GetEmployeeSkills(string id)
         {
             List<EmployeeSkill> employeeSkills = _context.EmployeeSkills.Include(e => e.Skill).ToList();
-            List<SkillDTO> skills = employeeSkills.Select(s => new EmployeeSkillMapper().Map(s)).ToList();
+            List<SkillExpertiseDTO> skills = employeeSkills.Select(s => new EmployeeSkillMapper().Map(s)).ToList();
 
             EmployeeSkillDTO employeeWithSkills = (from e in _context.EmployeeSkills
                                                         where e.Employee.IsActive.Equals(1) && e.Skill.isActive.Equals(1)
@@ -52,6 +52,14 @@ namespace EmployeeSkillManager.Services.Interfaces
         }
         public int AddEmployeeSkill(EmployeeAddSkillDTO employeeSkill)
         {
+            EmployeeSkill duplicateSkill = _context.EmployeeSkills
+                .FirstOrDefault(x => x.EmployeeId.Equals(employeeSkill.EmployeeId) && x.SkillId.Equals(employeeSkill.SkillId));
+
+            if(duplicateSkill != null)
+            {
+                return 0;
+            }
+
             EmployeeSkill newEmployeeSkill = new EmployeeSkill();
             {
                 newEmployeeSkill.EmployeeId = employeeSkill.EmployeeId;

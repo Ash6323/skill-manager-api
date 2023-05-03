@@ -57,7 +57,7 @@ namespace EmployeeSkillManager.WebAPI.Controllers
             }
             else
             {
-                Response response = new(StatusCodes.Status400BadRequest, ConstantMessages.ErrorOccurred, null);
+                Response response = new(StatusCodes.Status400BadRequest, ConstantMessages.DuplicateSkill, null);
                 return Ok(response);
             }
         }

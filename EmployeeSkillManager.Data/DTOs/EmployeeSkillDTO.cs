@@ -4,6 +4,6 @@
     {
         public string EmployeeId { get; set; }
         public string EmployeeName { get; set; }
-        public List<SkillDTO> EmployeeSkills { get; set; }
+        public List<SkillExpertiseDTO> EmployeeSkills { get; set; }
     }
 }

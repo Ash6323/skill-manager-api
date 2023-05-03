@@ -13,6 +13,7 @@
         public static string UserNotFound = "User does not Exist";
         public static string SkillNotFound = "Skill does not Exist";
         public static string ErrorOccurred = "An Error Occurred during the Operation";
+        public static string DuplicateSkill = "Employee already has this skill";
 
         public static string MatterDoesNotExist = "Matter with this ID does not Exist";
 

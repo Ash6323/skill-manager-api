@@ -5,9 +5,9 @@ namespace EmployeeSkillManager.Data.Mappers
 {
     public class EmployeeSkillMapper
     {
-        public SkillDTO Map(EmployeeSkill entity)
+        public SkillExpertiseDTO Map(EmployeeSkill entity)
         {
-            return new SkillDTO
+            return new SkillExpertiseDTO
             {
                 Id = entity.SkillId,
                 SkillName = entity.Skill.SkillName,

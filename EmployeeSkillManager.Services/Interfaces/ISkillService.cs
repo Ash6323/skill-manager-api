@@ -55,7 +55,7 @@ namespace EmployeeSkillManager.Services.Interfaces
         }
         public int UpdateSkill(int id, SkillDTO updatedSkill)
         {
-            Skill skill = _context.Skills.FirstOrDefault(s => s.Id.Equals(id));
+            Skill skill = _context.Skills.FirstOrDefault(s => s.Id.Equals(id) && s.isActive.Equals(1));
 
             if (skill != null)
             {
