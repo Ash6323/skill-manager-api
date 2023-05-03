@@ -15,31 +15,32 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(c => { 
-c.SwaggerDoc("v1", new OpenApiInfo { Title = "EmployeeSkillManagementAPI", Version = "v1" });
-c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
+builder.Services.AddSwaggerGen(c =>
 {
-    Name = "Authorization",
-    Type = SecuritySchemeType.ApiKey,
-    Scheme = "Bearer",
-    BearerFormat = "JWT",
-    In = ParameterLocation.Header,
-    Description = "Enter 'Bearer' [space] and then your valid token in the text input below.\r\n\r\nExample: \"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9\"",
-});
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "EmployeeSkillManagementAPI", Version = "v1" });
+    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
+    {
+        Name = "Authorization",
+        Type = SecuritySchemeType.ApiKey,
+        Scheme = "Bearer",
+        BearerFormat = "JWT",
+        In = ParameterLocation.Header,
+        Description = "Enter 'Bearer' [space] and then your valid token in the text input below.\r\n\r\nExample: \"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9\"",
+    });
     c.AddSecurityRequirement(new OpenApiSecurityRequirement
- {
- {
- new OpenApiSecurityScheme
- {
- Reference = new OpenApiReference
- {
- Type = ReferenceType.SecurityScheme,
- Id = "Bearer"
- }
- },
- new string[] {}
- }
- });
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            new string[] {}
+        }
+    });
 });
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>

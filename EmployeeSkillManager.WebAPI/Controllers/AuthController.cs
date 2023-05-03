@@ -19,7 +19,7 @@ namespace EmployeeSkillManager.WebAPI.Controllers
 
         [HttpPost]
         [Route("AdminRegistration")]
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         public async Task<IActionResult> AdminRegistration([FromBody] UserRegistrationDTO inputModel)
         {
             string result = await _authService.RegisterAdmin(inputModel);
@@ -44,7 +44,7 @@ namespace EmployeeSkillManager.WebAPI.Controllers
         }
         [HttpPost]
         [Route("EmployeeRegistration")]
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         public async Task<IActionResult> EmployeeRegistration([FromBody] UserRegistrationDTO inputModel)
         {
             string result = await _authService.RegisterEmployee(inputModel);

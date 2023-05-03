@@ -1,9 +1,6 @@
 ﻿using EmployeeSkillManager.Data.Context;
 using EmployeeSkillManager.Data.DTOs;
-using EmployeeSkillManager.Data.Mappers;
 using EmployeeSkillManager.Data.Models;
-using Microsoft.EntityFrameworkCore;
-using System.Linq;
 
 namespace EmployeeSkillManager.Services.Interfaces
 {
@@ -22,41 +19,47 @@ namespace EmployeeSkillManager.Services.Interfaces
         }
         public List<EmployeeSkillDTO> GetAllEmployeeSkills()
         {
-            //List<EmployeeSkill> queryableEmployeeSkills = _context.EmployeeSkills.Include(e => e.Skill).Select(); changes
-            List<EmployeeSkill> employeeSkills = _context.EmployeeSkills.Include(e => e.Skill).ToList();
-            List<SkillExpertiseDTO> skills = employeeSkills.Select(s => new EmployeeSkillMapper().Map(s)).ToList();
+            List<EmployeeSkillDTO> employeeSkills = (from e in _context.Employees
+                                                     where e.IsActive.Equals(1)
+                                                     select new EmployeeSkillDTO
+                                                     {
+                                                         EmployeeId = e.Id,
+                                                         EmployeeName = e.User.FullName,
+                                                         EmployeeSkills =
+                                                            e.EmployeeSkills.Select(es => new SkillExpertiseDTO()
+                                                            {
+                                                                Id = es.Skill.Id,
+                                                                SkillName = es.Skill.SkillName,
+                                                                Expertise = es.Expertise
+                                                            }).ToList()
+                                                     }).ToList();
 
-            List<EmployeeSkillDTO> allEmployeeSkills = (from e in _context.EmployeeSkills
-                where e.Employee.IsActive.Equals(1) && e.Skill.isActive.Equals(1)
-                select new EmployeeSkillDTO()
-                {
-                    EmployeeId = e.Employee.Id,
-                    EmployeeName = e.Employee.User.FullName,
-                    EmployeeSkills = skills,
-                    //EmployeeSkills = 
-                    //employeeSkills.Select(s => new EmployeeSkillMapper().Map(s)).Where(s => s.).ToList()
-                }).Distinct().ToList();
-            return allEmployeeSkills;
+            return employeeSkills;
         }
         public EmployeeSkillDTO GetEmployeeSkills(string id)
         {
-            List<EmployeeSkill> employeeSkills = _context.EmployeeSkills.Include(e => e.Skill).ToList();
-            List<SkillExpertiseDTO> skills = employeeSkills.Select(s => new EmployeeSkillMapper().Map(s)).ToList();
+            EmployeeSkillDTO employeeSkills = (from e in _context.Employees 
+                                      where e.IsActive.Equals(1)
+                                      select new EmployeeSkillDTO
+                                      {
+                                          EmployeeId = e.Id,
+                                          EmployeeName = e.User.FullName,
+                                          EmployeeSkills =
+                                            e.EmployeeSkills.Select(es => new SkillExpertiseDTO()
+                                            {
+                                                Id = es.Skill.Id,
+                                                SkillName = es.Skill.SkillName,
+                                                Expertise = es.Expertise
+                                            }).ToList()
+                                      }).FirstOrDefault(e => e.EmployeeId.Equals(id));
 
-            EmployeeSkillDTO employeeWithSkills = (from e in _context.EmployeeSkills
-                                                where e.Employee.IsActive.Equals(1) && e.Skill.isActive.Equals(1)
-                                                select new EmployeeSkillDTO()
-                                                {
-                                                    EmployeeId = e.Employee.Id,
-                                                    EmployeeName = e.Employee.User.FullName,
-                                                    EmployeeSkills = skills,
-                                                }).Distinct().FirstOrDefault(e => e.EmployeeId.Equals(id));
-            return employeeWithSkills;
+            return employeeSkills;
         }
         public int AddEmployeeSkill(EmployeeAddSkillDTO employeeSkill)
         {
             EmployeeSkill duplicateSkill = _context.EmployeeSkills
-                .FirstOrDefault(x => x.EmployeeId.Equals(employeeSkill.EmployeeId) && x.SkillId.Equals(employeeSkill.SkillId));
+                                        .FirstOrDefault(x => x.EmployeeId
+                                        .Equals(employeeSkill.EmployeeId) && x.SkillId.Equals(employeeSkill.SkillId));
 
             if(duplicateSkill != null)
             {
@@ -71,7 +74,7 @@ namespace EmployeeSkillManager.Services.Interfaces
                 //                                   .Select(x => x.SkillName)
                 //                                   .Where(s => s.Id.Equals(employeeSkill.EmployeeSkill.Id));
                 newEmployeeSkill.Expertise = employeeSkill.Expertise;
-                newEmployeeSkill.AddedAt = DateTime.Now;
+                newEmployeeSkill.AddedAt = DateTime.UtcNow;
             };
             _context.EmployeeSkills.Add(newEmployeeSkill);
             _context.SaveChanges();

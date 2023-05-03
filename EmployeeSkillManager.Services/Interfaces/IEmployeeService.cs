@@ -82,7 +82,7 @@ namespace EmployeeSkillManager.Services.Interfaces
                 employee.User.Address = updatedEmployee.Address;
                 employee.User.Zipcode = updatedEmployee.Zipcode;
                 employee.User.DateOfBirth = updatedEmployee.DateOfBirth;
-                employee.User.UpdatedAt = DateTime.Now;
+                employee.User.UpdatedAt = DateTime.UtcNow;
                 _dbContext.SaveChanges();
                 return employee.Id;
             }

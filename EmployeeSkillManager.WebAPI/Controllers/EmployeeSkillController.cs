@@ -19,7 +19,7 @@ namespace EmployeeSkillManager.WebAPI.Controllers
         }
         // GET: api/<EmployeeSkillController>
         [HttpGet]
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         public IActionResult Get()
         {
             List<EmployeeSkillDTO> result = _employeeSkillService.GetAllEmployeeSkills();
@@ -34,7 +34,7 @@ namespace EmployeeSkillManager.WebAPI.Controllers
 
         // GET api/<EmployeeSkillController>/5
         [HttpGet("{id}")]
-        [Authorize(Roles = "Admin, Employee")]
+        //[Authorize(Roles = "Admin, Employee")]
         public IActionResult Get(string id)
         {
             EmployeeSkillDTO result = _employeeSkillService.GetEmployeeSkills(id);
@@ -49,7 +49,7 @@ namespace EmployeeSkillManager.WebAPI.Controllers
 
         // POST api/<EmployeeSkillController>
         [HttpPost]
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         public IActionResult Post(EmployeeAddSkillDTO employeeSkill)
         {
             int result = _employeeSkillService.AddEmployeeSkill(employeeSkill);
@@ -69,14 +69,14 @@ namespace EmployeeSkillManager.WebAPI.Controllers
 
         // PUT api/<EmployeeSkillController>/5
         [HttpPut("{id}")]
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         public void Put(int id, [FromBody] string value)
         {
         }
 
         // DELETE api/<EmployeeSkillController>/5
         [HttpDelete("{id}")]
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         public void Delete(int id)
         {
         }

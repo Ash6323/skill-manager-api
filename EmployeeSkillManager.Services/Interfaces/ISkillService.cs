@@ -45,8 +45,8 @@ namespace EmployeeSkillManager.Services.Interfaces
             Skill newSkill = new Skill();
             {
                 newSkill.SkillName = skill.SkillName;
-                newSkill.CreatedAt = DateTime.Now;
-                newSkill.UpdatedAt = DateTime.Now;
+                newSkill.CreatedAt = DateTime.UtcNow;
+                newSkill.UpdatedAt = DateTime.UtcNow;
                 newSkill.isActive = 1;
             };
             _context.Skills.Add(newSkill);
@@ -66,7 +66,7 @@ namespace EmployeeSkillManager.Services.Interfaces
                     updatedSkill.SkillName = skill.SkillName;
 
                 skill.SkillName = updatedSkill.SkillName;
-                skill.UpdatedAt = DateTime.Now;
+                skill.UpdatedAt = DateTime.UtcNow;
                 _context.SaveChanges();
                 return skill.Id;
             }

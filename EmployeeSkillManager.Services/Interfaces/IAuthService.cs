@@ -39,7 +39,7 @@ namespace EmployeeSkillManager.Services.Interfaces
             JwtSecurityToken token = new JwtSecurityToken(
                 issuer: _configuration["JwtConfig:validIssuer"],
                 audience: _configuration["JwtConfig:validAudience"],
-                expires: DateTime.Now.AddHours(1),
+                expires: DateTime.UtcNow.AddHours(1),
                 claims: authClaim,
                 signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
                 );
@@ -68,8 +68,8 @@ namespace EmployeeSkillManager.Services.Interfaces
                 DateOfBirth = inputModel.DateOfBirth,
                 PreviousOrganisation = inputModel.PreviousOrganisation,
                 PreviousDesignation = inputModel.PreviousDesignation,
-                CreatedAt = DateTime.Now,
-                UpdatedAt = DateTime.Now,
+                CreatedAt = DateTime.UtcNow,
+                UpdatedAt = DateTime.UtcNow,
             };
             IdentityResult result = await _userManager.CreateAsync(user, inputModel.Password);
 
@@ -128,8 +128,8 @@ namespace EmployeeSkillManager.Services.Interfaces
                 DateOfBirth = inputModel.DateOfBirth,
                 PreviousOrganisation = inputModel.PreviousOrganisation,
                 PreviousDesignation = inputModel.PreviousDesignation,
-                CreatedAt = DateTime.Now,
-                UpdatedAt = DateTime.Now
+                CreatedAt = DateTime.UtcNow,
+                UpdatedAt = DateTime.UtcNow
             };
             IdentityResult result = await _userManager.CreateAsync(user, inputModel.Password);
 
@@ -179,8 +179,7 @@ namespace EmployeeSkillManager.Services.Interfaces
                 List<Claim> authClaims = new List<Claim>
                 {
                     new Claim(ClaimTypes.Name, user.UserName),
-                    new Claim("roles", userRole)
-
+                    new Claim(ClaimTypes.Role, userRole)
                 };
 
                 JwtSecurityToken token = GetToken(authClaims);

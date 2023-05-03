@@ -88,7 +88,7 @@ namespace EmployeeSkillManager.Services.Interfaces
                 admin.User.DateOfBirth = updatedAdmin.DateOfBirth;
                 //admin.User.PreviousOrganisation = updatedAdmin.PreviousOrganisation;
                 //admin.User.PreviousDesignation = updatedAdmin.PreviousDesignation;
-                admin.User.UpdatedAt = DateTime.Now;
+                admin.User.UpdatedAt = DateTime.UtcNow;
                 _dbContext.SaveChanges();
                 return admin.Id;
             }
