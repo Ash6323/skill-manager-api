@@ -3,6 +3,7 @@ using EmployeeSkillManager.Data.DTOs;
 using Microsoft.AspNetCore.Mvc;
 using EmployeeSkillManager.Services.Interfaces;
 using EmployeeSkillManager.Data.Constants;
+using Microsoft.AspNetCore.Authorization;
 
 namespace EmployeeSkillManager.WebAPI.Controllers
 {
@@ -17,6 +18,8 @@ namespace EmployeeSkillManager.WebAPI.Controllers
         }
 
         [HttpPost]
+        [Route("AdminRegistration")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> AdminRegistration([FromBody] UserRegistrationDTO inputModel)
         {
             string result = await _authService.RegisterAdmin(inputModel);
@@ -40,7 +43,9 @@ namespace EmployeeSkillManager.WebAPI.Controllers
             }
         }
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] UserRegistrationDTO inputModel)
+        [Route("EmployeeRegistration")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> EmployeeRegistration([FromBody] UserRegistrationDTO inputModel)
         {
             string result = await _authService.RegisterEmployee(inputModel);
 

@@ -178,7 +178,9 @@ namespace EmployeeSkillManager.Services.Interfaces
 
                 List<Claim> authClaims = new List<Claim>
                 {
-                    new Claim(ClaimTypes.Name, user.UserName)
+                    new Claim(ClaimTypes.Name, user.UserName),
+                    new Claim("roles", userRole)
+
                 };
 
                 JwtSecurityToken token = GetToken(authClaims);

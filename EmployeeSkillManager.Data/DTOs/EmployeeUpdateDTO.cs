@@ -11,7 +11,5 @@
         public string Address { get; set; }
         public string Zipcode { get; set; }
         public DateTime DateOfBirth { get; set; }
-        //public string PreviousOrganisation { get; set; }
-        //public string PreviousDesignation { get; set; }
     }
 }

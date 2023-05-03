@@ -82,8 +82,6 @@ namespace EmployeeSkillManager.Services.Interfaces
                 employee.User.Address = updatedEmployee.Address;
                 employee.User.Zipcode = updatedEmployee.Zipcode;
                 employee.User.DateOfBirth = updatedEmployee.DateOfBirth;
-                //employee.User.PreviousOrganisation = updatedEmployee.PreviousOrganisation;
-                //employee.User.PreviousDesignation = updatedEmployee.PreviousDesignation;
                 employee.User.UpdatedAt = DateTime.Now;
                 _dbContext.SaveChanges();
                 return employee.Id;
