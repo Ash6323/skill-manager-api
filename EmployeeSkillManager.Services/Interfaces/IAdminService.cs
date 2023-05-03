@@ -11,7 +11,6 @@ namespace EmployeeSkillManager.Services.Interfaces
 {
     public interface IAdminService
     {
-        Task<string> RegisterAdmin(UserRegistrationDTO inputModel);
         List<AdminDTO> GetAdmins();
         AdminDTO GetAdmin(string id);
         string UpdateAdmin(string id, AdminUpdateDTO updatedAdmin);
@@ -19,16 +18,9 @@ namespace EmployeeSkillManager.Services.Interfaces
     }
     public class AdminService : IAdminService
     {
-        private readonly UserManager<User> _userManager;
-        private readonly RoleManager<IdentityRole> _roleManager;
         private readonly ApplicationDbContext _dbContext;
-        private readonly IConfiguration _configuration;
-        public AdminService(UserManager<User> userManager, RoleManager<IdentityRole> roleManager, 
-                            IConfiguration configuration, ApplicationDbContext dbContext)
+        public AdminService(ApplicationDbContext dbContext)
         {
-            _userManager = userManager;
-            _roleManager = roleManager;
-            _configuration = configuration;
             _dbContext = dbContext;
         }
 
@@ -47,65 +39,7 @@ namespace EmployeeSkillManager.Services.Interfaces
             }
             return null;
         }
-        public async Task<string> RegisterAdmin(UserRegistrationDTO inputModel)
-        {
-            User userExists = await _userManager.FindByNameAsync(inputModel.Username);
-            if (userExists != null)
-            {
-                return "0";
-            }
-
-            User user = new()
-            {
-                FirstName = inputModel.FirstName,
-                LastName = inputModel.LastName,
-                PhoneNumber = inputModel.PhoneNumber,
-                Email = inputModel.Email,
-                SecurityStamp = Guid.NewGuid().ToString(),
-                UserName = inputModel.Username,
-                Address = inputModel.Address,
-                Zipcode = inputModel.Zipcode,
-                DateOfBirth = inputModel.DateOfBirth,
-                PreviousOrganisation = inputModel.PreviousOrganisation,
-                PreviousDesignation = inputModel.PreviousDesignation,
-                CreatedAt = DateTime.Now,
-                UpdatedAt = DateTime.Now,
-            };
-            IdentityResult result = await _userManager.CreateAsync(user, inputModel.Password);
-
-            if (!result.Succeeded)
-            {
-                return "-1";
-            }
-
-            if (!await _roleManager.RoleExistsAsync(UserRoles.Admin))
-            {
-                await _roleManager.CreateAsync(new IdentityRole(UserRoles.Admin));
-            }
-
-            if (await _roleManager.RoleExistsAsync(UserRoles.Admin))
-            {
-                await _userManager.AddToRoleAsync(user, UserRoles.Admin);
-            }
-
-            try
-            {
-                Admin newAdmin = new Admin
-                {
-                    Id = user.Id,
-                    Gender = inputModel.Gender,
-                    IsActive = 1
-                };
-                _dbContext.Admins.Add(newAdmin);
-                await _dbContext.SaveChangesAsync();
-            }
-            catch (Exception e)
-            {
-                return e.Message;
-            }
-
-            return user.Id;
-        }
+        
         public string UpdateAdmin(string id, AdminUpdateDTO updatedAdmin)
         {
             Admin admin = _dbContext.Admins.Include(e => e.User).FirstOrDefault(e => e.Id.Equals(id));

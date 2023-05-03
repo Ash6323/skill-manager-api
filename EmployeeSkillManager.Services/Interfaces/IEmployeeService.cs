@@ -1,18 +1,14 @@
-﻿using EmployeeSkillManager.Data.Constants;
-using EmployeeSkillManager.Data.Context;
+﻿using EmployeeSkillManager.Data.Context;
 using EmployeeSkillManager.Data.DTOs;
 using EmployeeSkillManager.Data.Enums;
 using EmployeeSkillManager.Data.Mappers;
 using EmployeeSkillManager.Data.Models;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 
 namespace EmployeeSkillManager.Services.Interfaces
 {
     public interface IEmployeeService
     {
-        Task<string> RegisterEmployee(UserRegistrationDTO inputModel);
         List<EmployeeDTO> GetEmployees();
         EmployeeDTO GetEmployee(string id);
         string UpdateEmployee(string id, EmployeeUpdateDTO updatedEmployee);
@@ -21,14 +17,9 @@ namespace EmployeeSkillManager.Services.Interfaces
     }
     public class EmployeeService : IEmployeeService
     {
-        private readonly UserManager<User> _userManager;
-        private readonly RoleManager<IdentityRole> _roleManager;
         private readonly ApplicationDbContext _dbContext;
-        public EmployeeService(UserManager<User> userManager, RoleManager<IdentityRole> roleManager, 
-                                ApplicationDbContext dbContext)
+        public EmployeeService(ApplicationDbContext dbContext)
         {
-            _userManager = userManager;
-            _roleManager = roleManager;
             _dbContext = dbContext;
         }
 
@@ -47,65 +38,6 @@ namespace EmployeeSkillManager.Services.Interfaces
                 return employee;
             }
             return null;
-        }
-        public async Task<string> RegisterEmployee(UserRegistrationDTO inputModel)
-        {
-            User userExists = await _userManager.FindByNameAsync(inputModel.Username);
-            if (userExists != null)
-            {
-                return "0";
-            }
-
-            User user = new User()
-            {
-                FirstName = inputModel.FirstName,
-                LastName = inputModel.LastName,
-                PhoneNumber = inputModel.PhoneNumber,
-                Email = inputModel.Email,
-                SecurityStamp = Guid.NewGuid().ToString(),
-                UserName = inputModel.Username,
-                Address = inputModel.Address,
-                Zipcode = inputModel.Zipcode,
-                DateOfBirth = inputModel.DateOfBirth,
-                PreviousOrganisation = inputModel.PreviousOrganisation,
-                PreviousDesignation = inputModel.PreviousDesignation,
-                CreatedAt = DateTime.Now,
-                UpdatedAt = DateTime.Now
-            };
-            IdentityResult result = await _userManager.CreateAsync(user, inputModel.Password);
-
-            if (!result.Succeeded)
-            {
-                return "-1";
-            }
-
-            if (!await _roleManager.RoleExistsAsync(UserRoles.Employee))
-            {
-                await _roleManager.CreateAsync(new IdentityRole(UserRoles.Employee));
-            }
-
-            if (await _roleManager.RoleExistsAsync(UserRoles.Employee))
-            {
-                await _userManager.AddToRoleAsync(user, UserRoles.Employee);
-            }
-
-            try
-            {
-                Employee newEmployee = new Employee()
-                {
-                    Id = user.Id,
-                    Gender = inputModel.Gender,
-                    IsActive = 1,
-                };
-                _dbContext.Employees.Add(newEmployee);
-                await _dbContext.SaveChangesAsync();
-            }
-            catch (Exception e)
-            {
-                return e.Message;
-            }
-
-            return user.Id;
         }
         public string UpdateEmployee(string id, EmployeeUpdateDTO updatedEmployee)
         {

@@ -9,11 +9,7 @@ namespace EmployeeSkillManager.Data.Context
         public ApplicationDbContext(DbContextOptions options) : base(options)
         {
         }
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder
-            .UseSqlServer("Server=SUNDAR-PICHAI\\MSSQLSERVER06;Database=EmployeeSkillsDB;Trusted_Connection=True;Encrypt=False;");
-        }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

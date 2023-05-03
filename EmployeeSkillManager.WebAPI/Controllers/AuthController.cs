@@ -1,11 +1,8 @@
 ﻿using EmployeeSkillManager.Data.Models;
 using EmployeeSkillManager.Data.DTOs;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
+using EmployeeSkillManager.Services.Interfaces;
+using EmployeeSkillManager.Data.Constants;
 
 namespace EmployeeSkillManager.WebAPI.Controllers
 {
@@ -13,66 +10,72 @@ namespace EmployeeSkillManager.WebAPI.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
-        private readonly UserManager<User> _userManager;
-        private readonly RoleManager<IdentityRole> _roleManager;
-        private readonly IConfiguration _configuration;
-        public AuthController(UserManager<User> userManager, RoleManager<IdentityRole> roleManager, IConfiguration configuration)
+        private readonly IAuthService _authService;
+        public AuthController(IAuthService authService)
         {
-            _userManager = userManager;
-            _roleManager = roleManager;
-            _configuration = configuration;
+            _authService = authService;
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AdminRegistration([FromBody] UserRegistrationDTO inputModel)
+        {
+            string result = await _authService.RegisterAdmin(inputModel);
+
+            if (result.Equals("0"))
+            {
+                Response userExistsResponse = new Response
+                    (StatusCodes.Status400BadRequest, ConstantMessages.UserAlreadyExists, ConstantMessages.UserAlreadyExists);
+                return BadRequest(userExistsResponse);
+            }
+            else if (result.Equals("-1"))
+            {
+                Response failedResponse = new Response
+                    (StatusCodes.Status400BadRequest, ConstantMessages.UserCreationFailed, ConstantMessages.UserCreationFailed);
+                return BadRequest(failedResponse);
+            }
+            else
+            {
+                Response response = new Response(StatusCodes.Status200OK, ConstantMessages.UserCreated, result);
+                return Ok(response);
+            }
+        }
+        [HttpPost]
+        public async Task<IActionResult> Post([FromBody] UserRegistrationDTO inputModel)
+        {
+            string result = await _authService.RegisterEmployee(inputModel);
+
+            if (result.Equals("0"))
+            {
+                Response userExistsResponse = new Response
+                    (StatusCodes.Status400BadRequest, ConstantMessages.UserAlreadyExists, ConstantMessages.UserAlreadyExists);
+                return BadRequest(userExistsResponse);
+            }
+            else if (result.Equals("-1"))
+            {
+                Response failedResponse = new Response
+                    (StatusCodes.Status400BadRequest, ConstantMessages.UserCreationFailed, ConstantMessages.UserCreationFailed);
+                return BadRequest(failedResponse);
+            }
+            else
+            {
+                Response response = new Response(StatusCodes.Status200OK, ConstantMessages.UserCreated, result);
+                return Ok(response);
+            }
         }
 
         [HttpPost]
         [Route("login")]
         public async Task<IActionResult> Login([FromBody] UserLoginDTO loginModel)
         {
-            User user = await _userManager.FindByNameAsync(loginModel.Username);
-
-            if (user != null && await _userManager.CheckPasswordAsync(user, loginModel.Password))
+            AuthBody authBody = await _authService.LoginAuth(loginModel);
+            if (authBody != null)
             {
-                IList<string> userRoles = await _userManager.GetRolesAsync(user);
-                string userRole = userRoles.FirstOrDefault();                            //changes
-
-                List<Claim> authClaims = new List<Claim>
-                {
-                    new Claim(ClaimTypes.Name, user.UserName)
-                    //new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                };
-
-                //Claim claim = new Claim(ClaimTypes.Name, user.UserName);
-
-                //foreach (string role in userRoles)
-                //{
-                //    authClaims.Add(new Claim(ClaimTypes.Role, role));
-                //}
-
-                JwtSecurityToken token = GetToken(authClaims);
-
-                return Ok(new
-                {
-                    token = new JwtSecurityTokenHandler().WriteToken(token),
-                    expiration = token.ValidTo,
-                    role = userRole,
-                    userId = user.Id
-                });
+                return Ok(authBody);
             }
-            return Unauthorized();
-        }
-
-        private JwtSecurityToken GetToken(List<Claim> authClaim)
-        {
-            var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JwtConfig:secret"]));
-
-            JwtSecurityToken token = new JwtSecurityToken(
-                issuer: _configuration["JwtConfig:validIssuer"],
-                audience: _configuration["JwtConfig:validAudience"],
-                expires: DateTime.Now.AddHours(1),
-                claims: authClaim,
-                signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
-                );
-
-            return token;
+            else
+            {
+                return Unauthorized();
+            }
         }
     }
 }
