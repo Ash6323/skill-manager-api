@@ -189,7 +189,8 @@ namespace EmployeeSkillManager.Services.Interfaces
                     Token = new JwtSecurityTokenHandler().WriteToken(token),
                     Expiration = token.ValidTo,
                     Role = userRole,
-                    UserId = user.Id
+                    UserId = user.Id,
+                    UserFullName = user.FullName
                 };
             }
             return null;

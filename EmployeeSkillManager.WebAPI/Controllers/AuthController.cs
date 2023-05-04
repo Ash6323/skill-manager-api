@@ -22,24 +22,33 @@ namespace EmployeeSkillManager.WebAPI.Controllers
         //[Authorize(Roles = "Admin")]
         public async Task<IActionResult> AdminRegistration([FromBody] UserRegistrationDTO inputModel)
         {
-            string result = await _authService.RegisterAdmin(inputModel);
+            try
+            {
+                string result = await _authService.RegisterAdmin(inputModel);
 
-            if (result.Equals("0"))
-            {
-                Response userExistsResponse = new Response
-                    (StatusCodes.Status400BadRequest, ConstantMessages.UserAlreadyExists, ConstantMessages.UserAlreadyExists);
-                return BadRequest(userExistsResponse);
+                if (result.Equals("0"))
+                {
+                    Response userExistsResponse = new Response
+                        (StatusCodes.Status400BadRequest, ConstantMessages.UserAlreadyExists, ConstantMessages.UserAlreadyExists);
+                    return BadRequest(userExistsResponse);
+                }
+                else if (result.Equals("-1"))
+                {
+                    Response failedResponse = new Response
+                        (StatusCodes.Status400BadRequest, ConstantMessages.UserCreationFailed, ConstantMessages.UserCreationFailed);
+                    return BadRequest(failedResponse);
+                }
+                else
+                {
+                    Response response = new Response(StatusCodes.Status200OK, ConstantMessages.UserCreated, result);
+                    return Ok(response);
+                }
             }
-            else if (result.Equals("-1"))
+            catch (Exception ex)
             {
-                Response failedResponse = new Response
-                    (StatusCodes.Status400BadRequest, ConstantMessages.UserCreationFailed, ConstantMessages.UserCreationFailed);
-                return BadRequest(failedResponse);
-            }
-            else
-            {
-                Response response = new Response(StatusCodes.Status200OK, ConstantMessages.UserCreated, result);
-                return Ok(response);
+                Response response = new Response
+                    (StatusCodes.Status500InternalServerError, ConstantMessages.ErrorOccurred, ex.Message);
+                return StatusCode(StatusCodes.Status500InternalServerError, response);
             }
         }
         [HttpPost]
@@ -47,39 +56,56 @@ namespace EmployeeSkillManager.WebAPI.Controllers
         //[Authorize(Roles = "Admin")]
         public async Task<IActionResult> EmployeeRegistration([FromBody] UserRegistrationDTO inputModel)
         {
-            string result = await _authService.RegisterEmployee(inputModel);
+            try
+            {
+                string result = await _authService.RegisterEmployee(inputModel);
 
-            if (result.Equals("0"))
-            {
-                Response userExistsResponse = new Response
-                    (StatusCodes.Status400BadRequest, ConstantMessages.UserAlreadyExists, ConstantMessages.UserAlreadyExists);
-                return BadRequest(userExistsResponse);
+                if (result.Equals("0"))
+                {
+                    Response userExistsResponse = new Response
+                        (StatusCodes.Status400BadRequest, ConstantMessages.UserAlreadyExists, ConstantMessages.UserAlreadyExists);
+                    return BadRequest(userExistsResponse);
+                }
+                else if (result.Equals("-1"))
+                {
+                    Response failedResponse = new Response
+                        (StatusCodes.Status400BadRequest, ConstantMessages.UserCreationFailed, ConstantMessages.UserCreationFailed);
+                    return BadRequest(failedResponse);
+                }
+                else
+                {
+                    Response response = new Response(StatusCodes.Status200OK, ConstantMessages.UserCreated, result);
+                    return Ok(response);
+                }
             }
-            else if (result.Equals("-1"))
+            catch (Exception ex)
             {
-                Response failedResponse = new Response
-                    (StatusCodes.Status400BadRequest, ConstantMessages.UserCreationFailed, ConstantMessages.UserCreationFailed);
-                return BadRequest(failedResponse);
-            }
-            else
-            {
-                Response response = new Response(StatusCodes.Status200OK, ConstantMessages.UserCreated, result);
-                return Ok(response);
+                Response response = new Response
+                    (StatusCodes.Status500InternalServerError, ConstantMessages.ErrorOccurred, ex.Message);
+                return StatusCode(StatusCodes.Status500InternalServerError, response);
             }
         }
-
         [HttpPost]
         [Route("login")]
         public async Task<IActionResult> Login([FromBody] UserLoginDTO loginModel)
         {
-            AuthBody authBody = await _authService.LoginAuth(loginModel);
-            if (authBody != null)
+            try
             {
-                return Ok(authBody);
+                AuthBody authBody = await _authService.LoginAuth(loginModel);
+                if (authBody != null)
+                {
+                    return Ok(authBody);
+                }
+                else
+                {
+                    return Unauthorized();
+                }
             }
-            else
+            catch (Exception ex)
             {
-                return Unauthorized();
+                Response response = new Response
+                    (StatusCodes.Status500InternalServerError, ConstantMessages.ErrorOccurred, ex.Message);
+                return StatusCode(StatusCodes.Status500InternalServerError, response);
             }
         }
     }

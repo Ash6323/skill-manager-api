@@ -4,7 +4,6 @@ using EmployeeSkillManager.Data.Models;
 using EmployeeSkillManager.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Data;
 
 namespace EmployeeSkillManager.WebAPI.Controllers
 {
@@ -22,14 +21,23 @@ namespace EmployeeSkillManager.WebAPI.Controllers
         //[Authorize(Roles = "Admin")]
         public IActionResult Get()
         {
-            List<EmployeeSkillDTO> result = _employeeSkillService.GetAllEmployeeSkills();
-            if (result != null)
+            try
             {
-                Response response = new
-                    Response(StatusCodes.Status200OK, ConstantMessages.DataRetrievedSuccessfully, result);
-                return Ok(response);
+                List<EmployeeSkillDTO> result = _employeeSkillService.GetAllEmployeeSkills();
+                if (result != null)
+                {
+                    Response response = new
+                        Response(StatusCodes.Status200OK, ConstantMessages.DataRetrievedSuccessfully, result);
+                    return Ok(response);
+                }
+                return NoContent();
             }
-            return NoContent();
+            catch (Exception ex)
+            {
+                Response response = new Response
+                    (StatusCodes.Status500InternalServerError, ConstantMessages.ErrorOccurred, ex.Message);
+                return StatusCode(StatusCodes.Status500InternalServerError, response);
+            }
         }
 
         // GET api/<EmployeeSkillController>/5
@@ -37,14 +45,23 @@ namespace EmployeeSkillManager.WebAPI.Controllers
         //[Authorize(Roles = "Admin, Employee")]
         public IActionResult Get(string id)
         {
-            EmployeeSkillDTO result = _employeeSkillService.GetEmployeeSkills(id);
-            if (result != null)
+            try
             {
-                Response foundResponse = new(StatusCodes.Status200OK, ConstantMessages.DataRetrievedSuccessfully, result);
-                return Ok(foundResponse);
+                EmployeeSkillDTO result = _employeeSkillService.GetEmployeeSkills(id);
+                if (result != null)
+                {
+                    Response foundResponse = new(StatusCodes.Status200OK, ConstantMessages.DataRetrievedSuccessfully, result);
+                    return Ok(foundResponse);
+                }
+                Response notFoundResponse = new(StatusCodes.Status404NotFound, ConstantMessages.SkillNotFound, null);
+                return NotFound(notFoundResponse);
             }
-            Response notFoundResponse = new(StatusCodes.Status404NotFound, ConstantMessages.SkillNotFound, null);
-            return NotFound(notFoundResponse);
+            catch (Exception ex)
+            {
+                Response response = new Response
+                    (StatusCodes.Status500InternalServerError, ConstantMessages.ErrorOccurred, ex.Message);
+                return StatusCode(StatusCodes.Status500InternalServerError, response);
+            }
         }
 
         // POST api/<EmployeeSkillController>
@@ -52,18 +69,34 @@ namespace EmployeeSkillManager.WebAPI.Controllers
         //[Authorize(Roles = "Admin")]
         public IActionResult Post(EmployeeAddSkillDTO employeeSkill)
         {
-            int result = _employeeSkillService.AddEmployeeSkill(employeeSkill);
+            try
+            {
+                int result = _employeeSkillService.AddEmployeeSkill(employeeSkill);
 
-            if (result.Equals(1))
+                if (result.Equals(0))
+                {
+
+                    Response response = new(StatusCodes.Status400BadRequest, ConstantMessages.DuplicateSkill, null);
+                    return BadRequest(response);
+                }
+                else if (result.Equals(1))
+                {
+
+                    Response response = new(StatusCodes.Status400BadRequest, ConstantMessages.InvalidDetails, null);
+                    return BadRequest(response);
+                }
+                else
+                {
+                    Response response = new Response
+                        (StatusCodes.Status200OK, ConstantMessages.DataAddedSuccessfully, ConstantMessages.DataAddedSuccessfully);
+                    return Ok(response);
+                }
+            }
+            catch (Exception ex)
             {
                 Response response = new Response
-                    (StatusCodes.Status200OK, ConstantMessages.DataAddedSuccessfully, ConstantMessages.DataAddedSuccessfully);
-                return Ok(response);
-            }
-            else
-            {
-                Response response = new(StatusCodes.Status400BadRequest, ConstantMessages.DuplicateSkill, null);
-                return Ok(response);
+                    (StatusCodes.Status500InternalServerError, ConstantMessages.ErrorOccurred, ex.Message);
+                return StatusCode(StatusCodes.Status500InternalServerError, response);
             }
         }
 

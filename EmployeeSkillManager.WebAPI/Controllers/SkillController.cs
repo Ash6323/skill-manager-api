@@ -22,14 +22,23 @@ namespace EmployeeSkillManager.WebAPI.Controllers
         //[Authorize(Roles = "Admin, Employee")]
         public IActionResult Get()
         {
-            List<SkillDTO> result = _skillService.GetSkills();
-            if (result != null)
+            try
             {
-                Response response = new
-                    Response(StatusCodes.Status200OK, ConstantMessages.DataRetrievedSuccessfully, result);
-                return Ok(response);
+                List<SkillDTO> result = _skillService.GetSkills();
+                if (result != null)
+                {
+                    Response response = new
+                        Response(StatusCodes.Status200OK, ConstantMessages.DataRetrievedSuccessfully, result);
+                    return Ok(response);
+                }
+                return NoContent();
             }
-            return NoContent();
+            catch (Exception ex)
+            {
+                Response response = new Response
+                    (StatusCodes.Status500InternalServerError, ConstantMessages.ErrorOccurred, ex.Message);
+                return StatusCode(StatusCodes.Status500InternalServerError, response);
+            }
         }
 
         // GET api/<SkillController>/5
@@ -37,14 +46,23 @@ namespace EmployeeSkillManager.WebAPI.Controllers
         //[Authorize(Roles = "Admin, Employee")]
         public IActionResult Get(int id)
         {
-            SkillDTO result = _skillService.GetSkill(id);
-            if (result != null)
+            try
             {
-                Response foundResponse = new(StatusCodes.Status200OK, ConstantMessages.DataRetrievedSuccessfully, result);
-                return Ok(foundResponse);
+                SkillDTO result = _skillService.GetSkill(id);
+                if (result != null)
+                {
+                    Response foundResponse = new(StatusCodes.Status200OK, ConstantMessages.DataRetrievedSuccessfully, result);
+                    return Ok(foundResponse);
+                }
+                Response notFoundResponse = new(StatusCodes.Status404NotFound, ConstantMessages.SkillNotFound, null);
+                return NotFound(notFoundResponse);
             }
-            Response notFoundResponse = new(StatusCodes.Status404NotFound, ConstantMessages.SkillNotFound, null);
-            return NotFound(notFoundResponse);
+            catch (Exception ex)
+            {
+                Response response = new Response
+                    (StatusCodes.Status500InternalServerError, ConstantMessages.ErrorOccurred, ex.Message);
+                return StatusCode(StatusCodes.Status500InternalServerError, response);
+            }
         }
 
         // POST api/<SkillController>
@@ -52,10 +70,19 @@ namespace EmployeeSkillManager.WebAPI.Controllers
         //[Authorize(Roles = "Admin")]
         public IActionResult Post(SkillDTO skill)
         {
-            int result = _skillService.AddSkill(skill);
+            try
+            {
+                int result = _skillService.AddSkill(skill);
 
-            Response response = new(StatusCodes.Status200OK, ConstantMessages.DataAddedSuccessfully, result);
-            return Ok(response);
+                Response response = new(StatusCodes.Status200OK, ConstantMessages.DataAddedSuccessfully, result);
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                Response response = new Response
+                    (StatusCodes.Status500InternalServerError, ConstantMessages.ErrorOccurred, ex.Message);
+                return StatusCode(StatusCodes.Status500InternalServerError, response);
+            }
         }
 
         // PUT api/<SkillController>/5
@@ -63,17 +90,26 @@ namespace EmployeeSkillManager.WebAPI.Controllers
         //[Authorize(Roles = "Admin")]
         public IActionResult Put(int id, [FromBody] SkillDTO updatedSkill)
         {
-            int result = _skillService.UpdateSkill(id, updatedSkill);
-            if (result.Equals(0))
+            try
             {
-                Response response = new
-                    (StatusCodes.Status404NotFound, ConstantMessages.SkillNotFound, ConstantMessages.SkillNotFound);
-                return NotFound(response);
+                int result = _skillService.UpdateSkill(id, updatedSkill);
+                if (result.Equals(0))
+                {
+                    Response response = new
+                        (StatusCodes.Status404NotFound, ConstantMessages.SkillNotFound, ConstantMessages.SkillNotFound);
+                    return NotFound(response);
+                }
+                else
+                {
+                    Response response = new(StatusCodes.Status200OK, ConstantMessages.DataUpdatedSuccessfully, result);
+                    return Ok(response);
+                }
             }
-            else
+            catch (Exception ex)
             {
-                Response response = new(StatusCodes.Status200OK, ConstantMessages.DataUpdatedSuccessfully, result);
-                return Ok(response);
+                Response response = new Response
+                    (StatusCodes.Status500InternalServerError, ConstantMessages.ErrorOccurred, ex.Message);
+                return StatusCode(StatusCodes.Status500InternalServerError, response);
             }
         }
 
@@ -82,17 +118,47 @@ namespace EmployeeSkillManager.WebAPI.Controllers
         //[Authorize(Roles = "Admin")]
         public IActionResult Delete(int id)
         {
-            int result = _skillService.DeleteSkill(id);
-            if (result.Equals(0))
+            try
             {
-                Response response =
-                    new(StatusCodes.Status400BadRequest, ConstantMessages.SkillNotFound, null);
-                return BadRequest(response);
+                int result = _skillService.DeleteSkill(id);
+                if (result.Equals(0))
+                {
+                    Response response =
+                        new(StatusCodes.Status400BadRequest, ConstantMessages.SkillNotFound, null);
+                    return BadRequest(response);
+                }
+                else
+                {
+                    Response response = new(StatusCodes.Status200OK, ConstantMessages.DataDeletedSuccessfully, result);
+                    return Ok(response);
+                }
             }
-            else
+            catch (Exception ex)
             {
-                Response response = new(StatusCodes.Status200OK, ConstantMessages.DataDeletedSuccessfully, result);
-                return Ok(response);
+                Response response = new Response
+                    (StatusCodes.Status500InternalServerError, ConstantMessages.ErrorOccurred, ex.Message);
+                return StatusCode(StatusCodes.Status500InternalServerError, response);
+            }
+        }
+        [HttpGet("Expertise")]
+        public IActionResult GetExpertises()
+        {
+            try
+            {
+                List<string> result = _skillService.GetExpertiseEnum();
+                if (result != null)
+                {
+                    Response response = new
+                        Response(StatusCodes.Status200OK, ConstantMessages.DataRetrievedSuccessfully, result);
+                    return Ok(response);
+                }
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                Response response = new Response
+                    (StatusCodes.Status500InternalServerError, ConstantMessages.ErrorOccurred, ex.Message);
+                return StatusCode(StatusCodes.Status500InternalServerError, response);
             }
         }
     }

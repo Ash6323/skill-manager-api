@@ -1,5 +1,6 @@
 ﻿using EmployeeSkillManager.Data.Context;
 using EmployeeSkillManager.Data.DTOs;
+using EmployeeSkillManager.Data.Enums;
 using EmployeeSkillManager.Data.Models;
 
 namespace EmployeeSkillManager.Services.Interfaces
@@ -11,6 +12,7 @@ namespace EmployeeSkillManager.Services.Interfaces
         int AddSkill(SkillDTO skill);
         int UpdateSkill(int id, SkillDTO updatedSkill);
         int DeleteSkill(int id);
+        List<string> GetExpertiseEnum();
     }
     public class SkillService : ISkillService
     {
@@ -84,6 +86,16 @@ namespace EmployeeSkillManager.Services.Interfaces
             }
             else
                 return 0;
+        }
+        public List<string> GetExpertiseEnum()
+        {
+            List<string> expertises = new List<string>();
+            foreach (var data in Enum.GetNames(typeof(Expertise)))
+            {
+                string value = data.ToString();
+                expertises.Add(value);
+            }
+            return expertises;
         }
     }
 }

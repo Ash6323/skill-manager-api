@@ -22,59 +22,96 @@ namespace EmployeeSkillManager.WebAPI.Controllers
         [HttpGet]
         public IActionResult Get()
         {
-            List<AdminDTO> result = _adminService.GetAdmins();
-            if (result != null)
+            try
             {
-                Response response = new
-                    Response(StatusCodes.Status200OK, ConstantMessages.DataRetrievedSuccessfully, result);
-                return Ok(response);
+                List<AdminDTO> result = _adminService.GetAdmins();
+                if (result != null)
+                {
+                    Response response = new
+                        Response(StatusCodes.Status200OK, ConstantMessages.DataRetrievedSuccessfully, result);
+                    return Ok(response);
+                }
+                return NoContent();
             }
-            return NoContent();
+            catch (Exception ex)
+            {
+                Response response = new Response
+                    (StatusCodes.Status500InternalServerError, ConstantMessages.ErrorOccurred, ex.Message);
+                return StatusCode(StatusCodes.Status500InternalServerError, response);
+            }
         }
         [HttpGet("{id}")]
         public IActionResult Get(string id)
         {
-            AdminDTO result = _adminService.GetAdmin(id);
-            if (result != null)
+            try
             {
-                Response foundResponse = new(StatusCodes.Status200OK, ConstantMessages.DataRetrievedSuccessfully, result);
-                return Ok(foundResponse);
+                AdminDTO result = _adminService.GetAdmin(id);
+                if (result != null)
+                {
+                    Response foundResponse = new(StatusCodes.Status200OK, ConstantMessages.DataRetrievedSuccessfully, result);
+                    return Ok(foundResponse);
+                }
+                Response nullResponse = new(StatusCodes.Status404NotFound, ConstantMessages.UserNotFound, null);
+                return NotFound(nullResponse);
             }
-            Response nullResponse = new(StatusCodes.Status404NotFound, ConstantMessages.UserNotFound, null);
-            return NotFound(nullResponse);
+            catch (Exception ex)
+            {
+                Response response = new Response
+                    (StatusCodes.Status500InternalServerError, ConstantMessages.ErrorOccurred, ex.Message);
+                return StatusCode(StatusCodes.Status500InternalServerError, response);
+            }
         }
 
         
         [HttpPut("{id}")]
         public IActionResult Put(string id, [FromBody] AdminUpdateDTO updatedAdmin)
         {
-            string result = _adminService.UpdateAdmin(id, updatedAdmin);
-            if (result.Equals("0"))
+            try
             {
-                Response response = new
-                    (StatusCodes.Status404NotFound, ConstantMessages.UserNotFound, ConstantMessages.UserNotFound);
-                return NotFound(response);
+                string result = _adminService.UpdateAdmin(id, updatedAdmin);
+                if (result.Equals("0"))
+                {
+                    Response response = new
+                        (StatusCodes.Status404NotFound, ConstantMessages.UserNotFound, ConstantMessages.UserNotFound);
+                    return NotFound(response);
+                }
+                else
+                {
+                    Response response = new(StatusCodes.Status200OK, ConstantMessages.DataUpdatedSuccessfully, result);
+                    return Ok(response);
+                }
             }
-            else
+            catch (Exception ex)
             {
-                Response response = new(StatusCodes.Status200OK, ConstantMessages.DataUpdatedSuccessfully, result);
-                return Ok(response);
+                Response response = new Response
+                    (StatusCodes.Status500InternalServerError, ConstantMessages.ErrorOccurred, ex.Message);
+                return StatusCode(StatusCodes.Status500InternalServerError, response);
             }
+
         }
         [HttpDelete("{id}")]
         public IActionResult Delete(string id)
         {
-            string result = _adminService.DeleteAdmin(id);
-            if (result.Equals("0"))
+            try
             {
-                Response response =
-                    new(StatusCodes.Status400BadRequest, ConstantMessages.UserNotFound, null);
-                return BadRequest(response);
+                string result = _adminService.DeleteAdmin(id);
+                if (result.Equals("0"))
+                {
+                    Response response =
+                        new(StatusCodes.Status400BadRequest, ConstantMessages.UserNotFound, null);
+                    return BadRequest(response);
+                }
+                else
+                {
+                    Response response = new(StatusCodes.Status200OK, ConstantMessages.DataDeletedSuccessfully, result);
+                    return Ok(response);
+                }
             }
-            else
+            catch (Exception ex)
             {
-                Response response = new(StatusCodes.Status200OK, ConstantMessages.DataDeletedSuccessfully, result);
-                return Ok(response);
+                Response response = new Response
+                    (StatusCodes.Status500InternalServerError, ConstantMessages.ErrorOccurred, ex.Message);
+                return StatusCode(StatusCodes.Status500InternalServerError, response);
             }
         }
     }
