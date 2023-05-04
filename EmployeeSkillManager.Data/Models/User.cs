@@ -15,7 +15,9 @@ namespace EmployeeSkillManager.Data.Models
         public string? ProfilePictureUrl { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
-        public string Address { get; set; }
+        public string Street { get; set; }
+        public string Town { get; set; }
+        public string City { get; set; }
         public string Zipcode { get; set; }
         public DateTime DateOfBirth { get; set; }
         public string PreviousOrganisation { get; set; }

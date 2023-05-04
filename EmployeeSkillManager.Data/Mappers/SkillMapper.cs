@@ -11,6 +11,7 @@ namespace EmployeeSkillManager.Data.Mappers
             {
                 Id = entity.Id,
                 SkillName = entity.SkillName,
+                Description = entity.Description,
             };
         }
     }

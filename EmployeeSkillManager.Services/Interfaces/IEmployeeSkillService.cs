@@ -51,7 +51,7 @@ namespace EmployeeSkillManager.Services.Interfaces
                                                 SkillName = es.Skill.SkillName,
                                                 Expertise = es.Expertise
                                             }).ToList()
-                                      }).FirstOrDefault(e => e.EmployeeId.Equals(id));
+                                      }).FirstOrDefault(e => e.EmployeeId.Equals(id))!;
 
             return employeeSkills;
         }
@@ -64,7 +64,7 @@ namespace EmployeeSkillManager.Services.Interfaces
 
             EmployeeSkill duplicateSkill = _context.EmployeeSkills
                                         .FirstOrDefault(x => x.EmployeeId
-                                        .Equals(employeeSkill.EmployeeId) && x.SkillId.Equals(employeeSkill.SkillId));
+                                        .Equals(employeeSkill.EmployeeId) && x.SkillId.Equals(employeeSkill.SkillId))!;
 
             if(duplicateSkill != null)
             {

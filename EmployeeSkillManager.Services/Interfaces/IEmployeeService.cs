@@ -31,7 +31,7 @@ namespace EmployeeSkillManager.Services.Interfaces
         public EmployeeDTO GetEmployee(string id)
         {
             Employee result = _dbContext.Employees.Include(e => e.User)
-                                                  .FirstOrDefault(e => e.Id.Equals(id) && e.IsActive.Equals(1));
+                                                  .FirstOrDefault(e => e.Id.Equals(id) && e.IsActive.Equals(1))!;
             if (result != null)
             {
                 EmployeeDTO employee = new EmployeeMapper().Map(result);
@@ -42,7 +42,7 @@ namespace EmployeeSkillManager.Services.Interfaces
         public string UpdateEmployee(string id, EmployeeUpdateDTO updatedEmployee)
         {
             Employee employee = _dbContext.Employees.Include(e => e.User)
-                                                    .FirstOrDefault(e => e.Id.Equals(id) && e.IsActive.Equals(1));
+                                                    .FirstOrDefault(e => e.Id.Equals(id) && e.IsActive.Equals(1))!;
 
             if (employee != null)
             {
@@ -64,8 +64,14 @@ namespace EmployeeSkillManager.Services.Interfaces
                 if (string.IsNullOrEmpty(updatedEmployee.Gender))
                     updatedEmployee.ProfilePictureUrl = employee.Gender;
 
-                if (string.IsNullOrEmpty(updatedEmployee.Address))
-                    updatedEmployee.Address = employee.User.Address;
+                if (string.IsNullOrEmpty(updatedEmployee.Street))
+                    updatedEmployee.Street = employee.User.Street;
+
+                if (string.IsNullOrEmpty(updatedEmployee.Town))
+                    updatedEmployee.Town = employee.User.Town;
+
+                if (string.IsNullOrEmpty(updatedEmployee.City))
+                    updatedEmployee.City = employee.User.City;
 
                 if (string.IsNullOrEmpty(updatedEmployee.Zipcode))
                     updatedEmployee.Zipcode = employee.User.Zipcode;
@@ -79,7 +85,9 @@ namespace EmployeeSkillManager.Services.Interfaces
                 employee.User.PhoneNumber = updatedEmployee.PhoneNumber;
                 employee.User.ProfilePictureUrl = updatedEmployee.ProfilePictureUrl;
                 employee.Gender = updatedEmployee.Gender;
-                employee.User.Address = updatedEmployee.Address;
+                employee.User.Street = updatedEmployee.Street;
+                employee.User.Town = updatedEmployee.Town;
+                employee.User.City = updatedEmployee.City;
                 employee.User.Zipcode = updatedEmployee.Zipcode;
                 employee.User.DateOfBirth = updatedEmployee.DateOfBirth;
                 employee.User.UpdatedAt = DateTime.UtcNow;
@@ -92,7 +100,7 @@ namespace EmployeeSkillManager.Services.Interfaces
         public string DeleteEmployee(string id)
         {
             Employee employee = _dbContext.Employees.Include(e => e.User)
-                                                    .FirstOrDefault(e => e.Id.Equals(id) && e.IsActive.Equals(1));
+                                                    .FirstOrDefault(e => e.Id.Equals(id) && e.IsActive.Equals(1))!;
             
             if (employee != null)
             {

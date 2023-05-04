@@ -67,8 +67,14 @@ namespace EmployeeSkillManager.Services.Interfaces
                 if (string.IsNullOrEmpty(updatedAdmin.Gender))
                     updatedAdmin.Gender = admin.Gender;
 
-                if (string.IsNullOrEmpty(updatedAdmin.Address))
-                    updatedAdmin.Address = admin.User.Address;
+                if (string.IsNullOrEmpty(updatedAdmin.Street))
+                    updatedAdmin.Street= admin.User.Street;
+
+                if (string.IsNullOrEmpty(updatedAdmin.Town))
+                    updatedAdmin.Town = admin.User.Town;
+
+                if (string.IsNullOrEmpty(updatedAdmin.City))
+                    updatedAdmin.City= admin.User.City;
 
                 if (string.IsNullOrEmpty(updatedAdmin.Zipcode))
                     updatedAdmin.Zipcode = admin.User.Zipcode;
@@ -83,7 +89,9 @@ namespace EmployeeSkillManager.Services.Interfaces
                 admin.User.PhoneNumber = updatedAdmin.PhoneNumber;
                 admin.User.ProfilePictureUrl = updatedAdmin.ProfilePictureUrl;
                 admin.Gender = updatedAdmin.Gender;
-                admin.User.Address = updatedAdmin.Address;
+                admin.User.Street = updatedAdmin.Street;
+                admin.User.Town = updatedAdmin.Town;
+                admin.User.City = updatedAdmin.City;
                 admin.User.Zipcode = updatedAdmin.Zipcode;
                 admin.User.DateOfBirth = updatedAdmin.DateOfBirth;
                 //admin.User.PreviousOrganisation = updatedAdmin.PreviousOrganisation;
