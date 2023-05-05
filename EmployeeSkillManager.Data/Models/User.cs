@@ -13,6 +13,7 @@ namespace EmployeeSkillManager.Data.Models
         public string LastName { get; set; }
         public string FullName { get { return FirstName + " " + LastName; } }
         public string? ProfilePictureUrl { get; set; }
+        public ProfileImage ProfileImages { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
         public string Street { get; set; }

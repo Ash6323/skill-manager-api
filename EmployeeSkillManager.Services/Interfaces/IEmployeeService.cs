@@ -56,13 +56,13 @@ namespace EmployeeSkillManager.Services.Interfaces
                     updatedEmployee.Email = employee.User.Email;
 
                 if (string.IsNullOrEmpty(updatedEmployee.PhoneNumber))
-                    updatedEmployee.Email = employee.User.PhoneNumber;
+                    updatedEmployee.PhoneNumber = employee.User.PhoneNumber;
 
                 if (string.IsNullOrEmpty(updatedEmployee.ProfilePictureUrl))
                     updatedEmployee.ProfilePictureUrl = null;
 
                 if (string.IsNullOrEmpty(updatedEmployee.Gender))
-                    updatedEmployee.ProfilePictureUrl = employee.Gender;
+                    updatedEmployee.Gender = employee.Gender;
 
                 if (string.IsNullOrEmpty(updatedEmployee.Street))
                     updatedEmployee.Street = employee.User.Street;

@@ -26,6 +26,10 @@ namespace EmployeeSkillManager.Data.Context
                         .HasKey(s => s.Id)
                         .HasName("PrimaryKey_SkillId");
 
+            modelBuilder.Entity<ProfileImage>()
+                        .HasOne(p => p.User)
+                        .WithOne(p => p.ProfileImages);
+
             modelBuilder.Entity<Employee>()
                         .HasMany(e => e.Skills)
                         .WithMany(e => e.Employees)
@@ -38,5 +42,6 @@ namespace EmployeeSkillManager.Data.Context
         public DbSet<Employee> Employees { get; set; }
         public DbSet<Skill> Skills { get; set; }
         public DbSet<EmployeeSkill> EmployeeSkills { get; set; }
+        public DbSet<ProfileImage> ProfileImages { get; set; }
     }
 }

@@ -60,19 +60,21 @@ namespace EmployeeSkillManager.Services.Interfaces
         }
         public int UpdateSkill(int id, SkillDTO updatedSkill)
         {
+            string duplicateSkill = _context.Skills.Select(s => s.SkillName).Where(s => s.Equals(updatedSkill.SkillName)).ToString()!;
+            if (string.IsNullOrEmpty(duplicateSkill))
+                return 1;
+
             Skill skill = _context.Skills.FirstOrDefault(s => s.Id.Equals(id) && s.IsActive.Equals(1))!;
 
             if (skill != null)
             {
-                if (skill.IsActive.Equals(0))
-                    return 0;
-
                 if (string.IsNullOrEmpty(updatedSkill.SkillName))
                     updatedSkill.SkillName = skill.SkillName;
                 if (string.IsNullOrEmpty(updatedSkill.Description))
                     updatedSkill.Description = skill.Description;
 
                 skill.SkillName = updatedSkill.SkillName;
+                skill.Description = updatedSkill.Description;
                 skill.UpdatedAt = DateTime.UtcNow;
                 _context.SaveChanges();
                 return skill.Id;

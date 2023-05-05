@@ -11,6 +11,7 @@
         public static string UserCreated = "User Creation Successful";
         public static string UserNotFound = "User does not Exist";
         public static string SkillNotFound = "Skill does not Exist";
+        public static string SkillAlreadyExists = "Skill already Exists";
         public static string ErrorOccurred = "An Error Occurred during the Operation";
         public static string DuplicateSkill = "Employee already has this skill";
         public static string InvalidDetails = "Entered Details are invalid. Please Try Again.";
