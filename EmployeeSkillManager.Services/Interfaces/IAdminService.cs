@@ -11,8 +11,8 @@ namespace EmployeeSkillManager.Services.Interfaces
 {
     public interface IAdminService
     {
-        List<AdminDTO> GetAdmins();
-        AdminDTO GetAdmin(string id);
+        List<UserDTO> GetAdmins();
+        UserDTO GetAdmin(string id);
         string UpdateAdmin(string id, AdminUpdateDTO updatedAdmin);
         string DeleteAdmin(string id);
     }
@@ -24,17 +24,17 @@ namespace EmployeeSkillManager.Services.Interfaces
             _dbContext = dbContext;
         }
 
-        public List<AdminDTO> GetAdmins()
+        public List<UserDTO> GetAdmins()
         {
             List<Admin> admins = _dbContext.Admins.Include(a => a.User).Where(e => e.IsActive.Equals(1)).ToList();
-            return admins.Select(a => new AdminMapper().Map(a)).ToList();
+            return admins.Select(a => new AdminUserMapper().Map(a)).ToList();
         }
-        public AdminDTO GetAdmin(string id)
+        public UserDTO GetAdmin(string id)
         {
-            Admin result = _dbContext.Admins.Include(e => e.User).FirstOrDefault(e => e.Id.Equals(id) && e.IsActive.Equals(1));
+            Admin result = _dbContext.Admins.Include(e => e.User).FirstOrDefault(e => e.Id.Equals(id) && e.IsActive.Equals(1))!;
             if (result != null)
             {
-                AdminDTO admin = new AdminMapper().Map(result);
+                UserDTO admin = new AdminUserMapper().Map(result);
                 return admin;
             }
             return null;
@@ -42,7 +42,7 @@ namespace EmployeeSkillManager.Services.Interfaces
         
         public string UpdateAdmin(string id, AdminUpdateDTO updatedAdmin)
         {
-            Admin admin = _dbContext.Admins.Include(e => e.User).FirstOrDefault(e => e.Id.Equals(id));
+            Admin admin = _dbContext.Admins.Include(e => e.User).FirstOrDefault(e => e.Id.Equals(id))!;
 
             if (admin != null)
             {

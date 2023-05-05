@@ -15,5 +15,7 @@
         public static string ErrorOccurred = "An Error Occurred during the Operation";
         public static string DuplicateSkill = "Employee already has this skill";
         public static string InvalidDetails = "Entered Details are invalid. Please Try Again.";
+        public static string UploadSuccessful = "Image Upload Successful";
+        public static string ImageNotFound = "Image Not Found";
     }
 }

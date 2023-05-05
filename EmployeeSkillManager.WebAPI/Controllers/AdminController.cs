@@ -24,7 +24,7 @@ namespace EmployeeSkillManager.WebAPI.Controllers
         {
             try
             {
-                List<AdminDTO> result = _adminService.GetAdmins();
+                List<UserDTO> result = _adminService.GetAdmins();
                 if (result != null)
                 {
                     Response response = new
@@ -45,7 +45,7 @@ namespace EmployeeSkillManager.WebAPI.Controllers
         {
             try
             {
-                AdminDTO result = _adminService.GetAdmin(id);
+                UserDTO result = _adminService.GetAdmin(id);
                 if (result != null)
                 {
                     Response foundResponse = new(StatusCodes.Status200OK, ConstantMessages.DataRetrievedSuccessfully, result);

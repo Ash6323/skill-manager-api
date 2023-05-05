@@ -1,8 +1,8 @@
 ﻿using EmployeeSkillManager.Data.Constants;
+using EmployeeSkillManager.Data.Context;
 using EmployeeSkillManager.Data.DTOs;
 using EmployeeSkillManager.Data.Models;
 using EmployeeSkillManager.Services.Interfaces;
-using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EmployeeSkillManager.WebAPI.Controllers
@@ -11,32 +11,38 @@ namespace EmployeeSkillManager.WebAPI.Controllers
     [ApiController]
     public class ProfileImageController : ControllerBase
     {
+        private readonly IWebHostEnvironment _environment;
         private readonly IProfileImageService _profileImageService;
-
-        public ProfileImageController(IProfileImageService profileImageService)
+        public ProfileImageController(IWebHostEnvironment environment, IProfileImageService profileImageService)
         {
+            _environment = environment;
             _profileImageService = profileImageService;
         }
         [HttpPost]
-        [RequestSizeLimit(5 * 1024 * 1024)]
-        public async Task<IActionResult> SubmitPost([FromForm] ProfileImageUploadDTO request)
+        public async Task<IActionResult> Post([FromForm] ProfileImageUploadDTO model)
         {
-            if (request == null)
+            Task<int> result = _profileImageService.UploadImageAsync(model);
+            if (model == null)
             {
-                Response response = new Response (StatusCodes.Status400BadRequest, 
-                                                    ConstantMessages.ErrorOccurred, ConstantMessages.ErrorOccurred);
-                return BadRequest();
+                return BadRequest(new Response(StatusCodes.Status400BadRequest, ConstantMessages.ErrorOccurred, null));
             }
-            if (request.Image != null)
+
+            Response response = new
+                        Response(StatusCodes.Status200OK, ConstantMessages.UploadSuccessful, ConstantMessages.UploadSuccessful);
+            return Ok(response);
+        }
+        [HttpGet]
+        public IActionResult Get(string id)
+        {
+            string result = _profileImageService.GetImage(id);
+            if (result == null)
             {
-                await _profileImageService.UploadImageAsync(request);
+                return BadRequest(new Response(StatusCodes.Status400BadRequest, ConstantMessages.ImageNotFound, null));
             }
-            var postResponse = await _profileImageService.SaveImageAsync(request);
-            //if (!postResponse)
-            //{
-            //    return NotFound(postResponse);
-            //}
-            return Ok(postResponse);
+
+            Response response = new
+                        Response(StatusCodes.Status200OK, ConstantMessages.DataRetrievedSuccessfully, result);
+            return Ok(response);
         }
     }
 }

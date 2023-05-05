@@ -9,8 +9,8 @@ namespace EmployeeSkillManager.Services.Interfaces
 {
     public interface IEmployeeService
     {
-        List<EmployeeDTO> GetEmployees();
-        EmployeeDTO GetEmployee(string id);
+        List<UserDTO> GetEmployees();
+        UserDTO GetEmployee(string id);
         string UpdateEmployee(string id, EmployeeUpdateDTO updatedEmployee);
         string DeleteEmployee(string id);
         List<string> GetGenderEnum();
@@ -23,18 +23,18 @@ namespace EmployeeSkillManager.Services.Interfaces
             _dbContext = dbContext;
         }
 
-        public List<EmployeeDTO> GetEmployees()
+        public List<UserDTO> GetEmployees()
         {
             List<Employee> employees = _dbContext.Employees.Include(e => e.User).Where(e=> e.IsActive.Equals(1)).ToList();
-            return employees.Select(e => new EmployeeMapper().Map(e)).ToList();
+            return employees.Select(e => new EmployeeUserMapper().Map(e)).ToList();
         }
-        public EmployeeDTO GetEmployee(string id)
+        public UserDTO GetEmployee(string id)
         {
             Employee result = _dbContext.Employees.Include(e => e.User)
                                                   .FirstOrDefault(e => e.Id.Equals(id) && e.IsActive.Equals(1))!;
             if (result != null)
             {
-                EmployeeDTO employee = new EmployeeMapper().Map(result);
+                UserDTO employee = new EmployeeUserMapper().Map(result);
                 return employee;
             }
             return null;

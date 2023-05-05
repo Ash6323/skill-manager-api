@@ -1,16 +1,15 @@
 ﻿using EmployeeSkillManager.Data.Context;
 using EmployeeSkillManager.Data.DTOs;
-using EmployeeSkillManager.Data.Helpers;
 using EmployeeSkillManager.Data.Models;
 using Microsoft.AspNetCore.Hosting;
-using System;
+using Microsoft.AspNetCore.Mvc;
 
 namespace EmployeeSkillManager.Services.Interfaces
 {
     public interface IProfileImageService
     {
         Task<int> UploadImageAsync(ProfileImageUploadDTO imageEntity);
-        Task<int> SaveImageAsync(ProfileImageUploadDTO saveImageEntity);
+        string GetImage(string userId);
     }
     public class ProfileImageService : IProfileImageService
     {
@@ -21,38 +20,46 @@ namespace EmployeeSkillManager.Services.Interfaces
             _context = context;
             _environment = environment;
         }
-        public async Task<int> UploadImageAsync(ProfileImageUploadDTO imageEntity)
+        public async Task<int> UploadImageAsync([FromForm] ProfileImageUploadDTO imageEntity)
         {
-            ProfileImage post = new ProfileImage
-            {  
-                UserId = imageEntity.UserId,
-                ImagePath = imageEntity.ImagePath
-            };
 
-            var postEntry = await _context.ProfileImages.AddAsync(post);
-            var saveResponse = await _context.SaveChangesAsync();
-
-            if (saveResponse < 0)
+            if (imageEntity.Image.FileName == null || imageEntity.Image.FileName.Length == 0)
             {
                 return 0;
             }
-            var postEntity = postEntry.Entity;
-            ProfileImageDTO postModel = new ProfileImageDTO
+
+            string path = Path.Combine(_environment.WebRootPath, 
+                                        "Images/", Guid.NewGuid().ToString() + imageEntity.Image.FileName);
+
+            using (FileStream stream = new FileStream(path, FileMode.Create))
             {
-                UserId = postEntity.UserId,
-                ImagePath = Path.Combine(postEntity.ImagePath)
+                await imageEntity.Image.CopyToAsync(stream);
+                stream.Close();
+            }
+
+            ProfileImage userProfileModel = new ProfileImage
+            {
+                UserId = imageEntity.UserId,
+                ImagePath = path
             };
+
+            User user = _context.Users.FirstOrDefault(e => e.Id.Equals(imageEntity.UserId))!;
+            user.ProfilePictureUrl = path;
+
+            _context.Add(userProfileModel);
+            await _context.SaveChangesAsync();
+
             return 1;
         }
-        public async Task<int> SaveImageAsync(ProfileImageUploadDTO postRequest)
+        public string GetImage(string userId)
         {
-            string uniqueFileName = ProfileImageHelper.GetUniqueFileName(postRequest.Image.FileName);
-            string uploads = Path.Combine(_environment.WebRootPath, "users", "images", postRequest.UserId.ToString());
-            string filePath = Path.Combine(uploads, uniqueFileName);
-            Directory.CreateDirectory(Path.GetDirectoryName(filePath));
-            await postRequest.Image.CopyToAsync(new FileStream(filePath, FileMode.Create));
-            postRequest.ImagePath = filePath;
-            return 0;
+            string imagePath = _context.Users.FirstOrDefault(e => e.Id.Equals(userId)).ProfilePictureUrl;
+            if (string.IsNullOrEmpty(imagePath))
+            {
+                return null;
+            }
+            else
+                return imagePath;
         }
     }
 }

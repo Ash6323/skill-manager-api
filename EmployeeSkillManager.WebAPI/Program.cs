@@ -53,7 +53,7 @@ builder.Services.AddScoped<IAdminService, AdminService>();
 builder.Services.AddScoped<IEmployeeService, EmployeeService>();
 builder.Services.AddScoped<ISkillService, SkillService>();
 builder.Services.AddScoped<IEmployeeSkillService, EmployeeSkillService>();
-builder.Services.AddTransient<IProfileImageService, ProfileImageService>();
+builder.Services.AddScoped<IProfileImageService, ProfileImageService>();
 
 builder.Services.AddIdentity<User, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
@@ -99,6 +99,8 @@ if (app.Environment.IsDevelopment())
 
 app.UseCors("ReactPolicy");
 app.UseHttpsRedirection();
+
+app.UseStaticFiles();
 
 app.UseAuthentication();
 app.UseAuthorization();

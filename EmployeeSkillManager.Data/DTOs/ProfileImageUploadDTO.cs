@@ -9,10 +9,6 @@ namespace EmployeeSkillManager.Data.DTOs
     {
         public string UserId { get; set; }
 
-        [NotMapped]
         public IFormFile Image { get; set; }
-
-        [JsonIgnore(Condition = JsonIgnoreCondition.Always)]
-        public string ImagePath { get; set; }
     }
 }
