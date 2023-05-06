@@ -21,7 +21,8 @@ namespace EmployeeSkillManager.WebAPI.Controllers
         [HttpPost]
         public async Task<IActionResult> Post([FromForm] ProfileImageUploadDTO model)
         {
-            Task<int> result = _profileImageService.UploadImageAsync(model);
+            await _profileImageService.UploadImage(model);
+
             if (model == null)
             {
                 return BadRequest(new Response(StatusCodes.Status400BadRequest, ConstantMessages.ErrorOccurred, null));

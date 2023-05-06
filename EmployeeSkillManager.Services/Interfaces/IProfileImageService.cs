@@ -8,7 +8,7 @@ namespace EmployeeSkillManager.Services.Interfaces
 {
     public interface IProfileImageService
     {
-        Task<int> UploadImageAsync(ProfileImageUploadDTO imageEntity);
+        Task<int> UploadImage(ProfileImageUploadDTO imageEntity);
         string GetImage(string userId);
     }
     public class ProfileImageService : IProfileImageService
@@ -20,7 +20,7 @@ namespace EmployeeSkillManager.Services.Interfaces
             _context = context;
             _environment = environment;
         }
-        public async Task<int> UploadImageAsync([FromForm] ProfileImageUploadDTO imageEntity)
+        public async Task<int> UploadImage([FromForm] ProfileImageUploadDTO imageEntity)
         {
 
             if (imageEntity.Image.FileName == null || imageEntity.Image.FileName.Length == 0)
@@ -29,7 +29,7 @@ namespace EmployeeSkillManager.Services.Interfaces
             }
 
             string path = Path.Combine(_environment.WebRootPath, 
-                                        "Images/", Guid.NewGuid().ToString() + imageEntity.Image.FileName);
+                                        "Images", Guid.NewGuid().ToString() + imageEntity.Image.FileName);
 
             using (FileStream stream = new FileStream(path, FileMode.Create))
             {
@@ -37,17 +37,24 @@ namespace EmployeeSkillManager.Services.Interfaces
                 stream.Close();
             }
 
-            ProfileImage userProfileModel = new ProfileImage
+            ProfileImage imageData = _context.ProfileImages.FirstOrDefault(e => e.UserId.Equals(imageEntity.UserId))!;
+            if(imageData == null)
             {
-                UserId = imageEntity.UserId,
-                ImagePath = path
-            };
+                ProfileImage userProfileModel = new ProfileImage
+                {
+                    UserId = imageEntity.UserId,
+                    ImagePath = path
+                };
+                _context.Add(userProfileModel);
+            }
+            else
+            {
+                imageData.ImagePath = path;
+            }
 
             User user = _context.Users.FirstOrDefault(e => e.Id.Equals(imageEntity.UserId))!;
             user.ProfilePictureUrl = path;
-
-            _context.Add(userProfileModel);
-            await _context.SaveChangesAsync();
+            _context.SaveChanges();
 
             return 1;
         }
