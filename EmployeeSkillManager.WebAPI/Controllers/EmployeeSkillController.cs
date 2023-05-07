@@ -75,7 +75,6 @@ namespace EmployeeSkillManager.WebAPI.Controllers
 
                 if (result.Equals(0))
                 {
-
                     Response response = new(StatusCodes.Status400BadRequest, ConstantMessages.DuplicateSkill, null);
                     return BadRequest(response);
                 }
@@ -103,15 +102,27 @@ namespace EmployeeSkillManager.WebAPI.Controllers
         // PUT api/<EmployeeSkillController>/5
         [HttpPut("{id}")]
         //[Authorize(Roles = "Admin")]
-        public void Put(int id, [FromBody] string value)
+        public IActionResult Put(EmployeeSkillUpdateDTO employeeSkill)
         {
-        }
+            try
+            {
+                int result = _employeeSkillService.UpdateEmployeeSkill(employeeSkill);
 
-        // DELETE api/<EmployeeSkillController>/5
-        [HttpDelete("{id}")]
-        //[Authorize(Roles = "Admin")]
-        public void Delete(int id)
-        {
+                if (result.Equals(0))
+                {
+                    Response invalidResponse = new(StatusCodes.Status400BadRequest, ConstantMessages.SkillNotFound, null);
+                    return BadRequest(invalidResponse);
+                }
+                Response response = new Response
+                    (StatusCodes.Status200OK, ConstantMessages.DataUpdatedSuccessfully, ConstantMessages.DataUpdatedSuccessfully);
+                return Ok(response);
+            }
+            catch(Exception ex)
+            {
+                Response response = new Response
+                    (StatusCodes.Status500InternalServerError, ConstantMessages.ErrorOccurred, ex.Message);
+                return StatusCode(StatusCodes.Status500InternalServerError, response);
+            }
         }
     }
 }

@@ -9,6 +9,7 @@ namespace EmployeeSkillManager.Services.Interfaces
         List<EmployeeSkillDTO> GetAllEmployeeSkills();
         EmployeeSkillDTO GetEmployeeSkills(string id);
         int AddEmployeeSkill(EmployeeAddSkillDTO employeeSkill);
+        int UpdateEmployeeSkill(EmployeeSkillUpdateDTO employeeSkill);
     }
     public class EmployeeSkillService : IEmployeeSkillService
     {
@@ -65,7 +66,6 @@ namespace EmployeeSkillManager.Services.Interfaces
             EmployeeSkill duplicateSkill = _context.EmployeeSkills
                                         .FirstOrDefault(x => x.EmployeeId
                                         .Equals(employeeSkill.EmployeeId) && x.SkillId.Equals(employeeSkill.SkillId))!;
-
             if(duplicateSkill != null)
             {
                 return 0;
@@ -81,6 +81,20 @@ namespace EmployeeSkillManager.Services.Interfaces
             _context.EmployeeSkills.Add(newEmployeeSkill);
             _context.SaveChanges();
             return newEmployeeSkill.SkillId;
+        }
+        public int UpdateEmployeeSkill(EmployeeSkillUpdateDTO employeeSkill)
+        {
+            EmployeeSkill skill = _context.EmployeeSkills
+                                        .FirstOrDefault(x => x.EmployeeId.Equals(employeeSkill.EmployeeId) 
+                                                        && x.SkillId.Equals(employeeSkill.SkillId))!;
+            if(skill == null)
+            {
+                return 0;
+            }
+
+            skill.Expertise = employeeSkill.Expertise;
+            _context.SaveChanges();
+            return skill.SkillId;
         }
     }
 }
