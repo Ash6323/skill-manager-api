@@ -1,11 +1,8 @@
-﻿using EmployeeSkillManager.Data.Constants;
-using EmployeeSkillManager.Data.Context;
+﻿using EmployeeSkillManager.Data.Context;
 using EmployeeSkillManager.Data.DTOs;
 using EmployeeSkillManager.Data.Mappers;
 using EmployeeSkillManager.Data.Models;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 
 namespace EmployeeSkillManager.Services.Interfaces
 {
@@ -106,7 +103,7 @@ namespace EmployeeSkillManager.Services.Interfaces
         public string DeleteAdmin(string id)
         {
             Admin admin = _dbContext.Admins.Include(a => a.User)
-                                                    .FirstOrDefault(a => a.Id.Equals(id) && a.IsActive.Equals(1));
+                                                    .FirstOrDefault(a => a.Id.Equals(id) && a.IsActive.Equals(1))!;
 
             if (admin != null)
             {
