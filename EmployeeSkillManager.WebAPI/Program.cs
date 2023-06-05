@@ -1,6 +1,7 @@
 using EmployeeSkillManager.Data.Context;
 using EmployeeSkillManager.Data.Models;
 using EmployeeSkillManager.Services.Interfaces;
+using EmployeeSkillManager.Services.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
