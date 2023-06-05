@@ -4,7 +4,6 @@ using EmployeeSkillManager.Data.Models;
 using EmployeeSkillManager.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Data;
 
 namespace EmployeeSkillManager.WebAPI.Controllers
 {
@@ -19,7 +18,7 @@ namespace EmployeeSkillManager.WebAPI.Controllers
         }
         // GET: api/<SkillController>
         [HttpGet]
-        //[Authorize(Roles = "Admin, Employee")]
+        [Authorize(Roles = "Admin, Employee")]
         public IActionResult Get()
         {
             try
@@ -43,7 +42,7 @@ namespace EmployeeSkillManager.WebAPI.Controllers
 
         // GET api/<SkillController>/5
         [HttpGet("{id}")]
-        //[Authorize(Roles = "Admin, Employee")]
+        [Authorize(Roles = "Admin, Employee")]
         public IActionResult Get(int id)
         {
             try
@@ -67,7 +66,7 @@ namespace EmployeeSkillManager.WebAPI.Controllers
 
         // POST api/<SkillController>
         [HttpPost]
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         public IActionResult Post(SkillDTO skill)
         {
             try
@@ -87,7 +86,7 @@ namespace EmployeeSkillManager.WebAPI.Controllers
 
         // PUT api/<SkillController>/5
         [HttpPut("{id}")]
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         public IActionResult Put(int id, [FromBody] SkillDTO updatedSkill)
         {
             try
@@ -121,7 +120,7 @@ namespace EmployeeSkillManager.WebAPI.Controllers
 
         // DELETE api/<SkillController>/5
         [HttpDelete("{id}")]
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         public IActionResult Delete(int id)
         {
             try

@@ -6,6 +6,7 @@ using EmployeeSkillManager.Data.DTOs;
 using EmployeeSkillManager.Services.Interfaces;
 using EmployeeSkillManager.Data.Constants;
 using EmployeeSkillManager.Data.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace EmployeeSkillManager.WebAPI.Controllers
 {
@@ -20,6 +21,7 @@ namespace EmployeeSkillManager.WebAPI.Controllers
         }
 
         [HttpGet("{id}")]
+        [Authorize(Roles = "Admin")]
         public IActionResult GeneratePDF(string id)
         {
             try

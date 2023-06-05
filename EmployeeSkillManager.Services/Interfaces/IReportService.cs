@@ -1,5 +1,4 @@
-﻿using EmployeeSkillManager.Data.Context;
-using EmployeeSkillManager.Data.DTOs;
+﻿using EmployeeSkillManager.Data.DTOs;
 
 namespace EmployeeSkillManager.Services.Interfaces
 {

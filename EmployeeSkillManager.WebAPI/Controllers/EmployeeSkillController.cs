@@ -18,7 +18,7 @@ namespace EmployeeSkillManager.WebAPI.Controllers
         }
         // GET: api/<EmployeeSkillController>
         [HttpGet]
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         public IActionResult Get()
         {
             try
@@ -42,7 +42,7 @@ namespace EmployeeSkillManager.WebAPI.Controllers
 
         // GET api/<EmployeeSkillController>/5
         [HttpGet("{id}")]
-        //[Authorize(Roles = "Admin, Employee")]
+        [Authorize(Roles = "Admin, Employee")]
         public IActionResult Get(string id)
         {
             try
@@ -66,7 +66,7 @@ namespace EmployeeSkillManager.WebAPI.Controllers
 
         // POST api/<EmployeeSkillController>
         [HttpPost]
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         public IActionResult Post(EmployeeAddSkillDTO employeeSkill)
         {
             try
@@ -101,7 +101,7 @@ namespace EmployeeSkillManager.WebAPI.Controllers
 
         // PUT api/<EmployeeSkillController>/5
         [HttpPut("{id}")]
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         public IActionResult Put(EmployeeSkillUpdateDTO employeeSkill)
         {
             try

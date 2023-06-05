@@ -9,7 +9,7 @@ using System.Data;
 namespace EmployeeSkillManager.WebAPI.Controllers
 {
     [Route("api/[controller]")]
-    //[Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin")]
     [ApiController]
     public class AdminController : ControllerBase
     {
