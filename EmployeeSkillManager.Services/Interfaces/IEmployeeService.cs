@@ -22,7 +22,6 @@ namespace EmployeeSkillManager.Services.Interfaces
         {
             _dbContext = dbContext;
         }
-
         public List<UserDTO> GetEmployees()
         {
             List<Employee> employees = _dbContext.Employees.Include(e => e.User).Where(e=> e.IsActive.Equals(1)).ToList();

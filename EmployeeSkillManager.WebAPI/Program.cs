@@ -52,6 +52,7 @@ builder.Services.AddScoped<IEmployeeService, EmployeeService>();
 builder.Services.AddScoped<ISkillService, SkillService>();
 builder.Services.AddScoped<IEmployeeSkillService, EmployeeSkillService>();
 builder.Services.AddScoped<IProfileImageService, ProfileImageService>();
+builder.Services.AddScoped<IReportService, ReportService>();
 
 builder.Services.AddIdentity<User, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
@@ -63,8 +64,6 @@ builder.Services.AddCors(o => o.AddPolicy("ReactPolicy", builder =>
            .AllowAnyMethod()
            .AllowAnyHeader();
 }));
-
-
 
 builder.Services.AddAuthentication(options =>
 {
