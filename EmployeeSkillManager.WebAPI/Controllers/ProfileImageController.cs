@@ -1,5 +1,4 @@
 ﻿using EmployeeSkillManager.Data.Constants;
-using EmployeeSkillManager.Data.Context;
 using EmployeeSkillManager.Data.DTOs;
 using EmployeeSkillManager.Data.Models;
 using EmployeeSkillManager.Services.Interfaces;
@@ -11,11 +10,9 @@ namespace EmployeeSkillManager.WebAPI.Controllers
     [ApiController]
     public class ProfileImageController : ControllerBase
     {
-        private readonly IWebHostEnvironment _environment;
         private readonly IProfileImageService _profileImageService;
-        public ProfileImageController(IWebHostEnvironment environment, IProfileImageService profileImageService)
+        public ProfileImageController(IProfileImageService profileImageService)
         {
-            _environment = environment;
             _profileImageService = profileImageService;
         }
         [HttpPost]
@@ -24,12 +21,10 @@ namespace EmployeeSkillManager.WebAPI.Controllers
             try
             {
                 await _profileImageService.UploadImage(model);
-
                 if (model == null)
                 {
                     return BadRequest(new Response(StatusCodes.Status400BadRequest, ConstantMessages.ErrorOccurred, null));
                 }
-
                 Response response = new
                             Response(StatusCodes.Status200OK, ConstantMessages.UploadSuccessful, ConstantMessages.UploadSuccessful);
                 return Ok(response);
@@ -40,7 +35,6 @@ namespace EmployeeSkillManager.WebAPI.Controllers
                     (StatusCodes.Status500InternalServerError, ConstantMessages.ErrorOccurred, ex.Message);
                 return StatusCode(StatusCodes.Status500InternalServerError, response);
             }
-            
         }
         [HttpGet]
         public IActionResult Get(string id)
@@ -52,7 +46,6 @@ namespace EmployeeSkillManager.WebAPI.Controllers
                 {
                     return BadRequest(new Response(StatusCodes.Status400BadRequest, ConstantMessages.ImageNotFound, null));
                 }
-
                 Response response = new
                             Response(StatusCodes.Status200OK, ConstantMessages.DataRetrievedSuccessfully, result);
                 return Ok(response);

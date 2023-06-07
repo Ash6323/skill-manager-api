@@ -45,7 +45,6 @@ namespace EmployeeSkillManager.WebAPI.Controllers
                     (StatusCodes.Status500InternalServerError, ConstantMessages.ErrorOccurred, ex.Message);
                 return StatusCode(StatusCodes.Status500InternalServerError, response);
             }
-
         }
     }
 }

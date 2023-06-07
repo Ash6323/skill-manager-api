@@ -24,10 +24,11 @@ namespace EmployeeSkillManager.Services.Services
                 return 0;
             }
 
-            string path = Path.Combine(_environment.WebRootPath, 
-                                        "Images", Guid.NewGuid().ToString() + imageEntity.Image.FileName);
+            string randomFileName = Guid.NewGuid().ToString();
+            string rootPath = Path.Combine(_environment.WebRootPath,"Images", randomFileName + imageEntity.Image.FileName);
+            string databaseImagePath = "\\Images\\" + randomFileName + imageEntity.Image.FileName;
 
-            using (FileStream stream = new FileStream(path, FileMode.Create))
+            using (FileStream stream = new FileStream(rootPath, FileMode.Create))
             {
                 await imageEntity.Image.CopyToAsync(stream);
                 stream.Close();
@@ -39,27 +40,27 @@ namespace EmployeeSkillManager.Services.Services
                 ProfileImage userProfileModel = new ProfileImage
                 {
                     UserId = imageEntity.UserId,
-                    ImagePath = path
+                    ImagePath = databaseImagePath
                 };
                 _context.Add(userProfileModel);
             }
             else
             {
-                imageData.ImagePath = path;
+                imageData.ImagePath = databaseImagePath;
             }
 
             User user = _context.Users.FirstOrDefault(e => e.Id.Equals(imageEntity.UserId))!;
-            user.ProfilePictureUrl = path;
+            user.ProfilePictureUrl = databaseImagePath;
             _context.SaveChanges();
 
             return 1;
         }
         public string GetImage(string userId)
         {
-            string imagePath = _context.Users.FirstOrDefault(e => e.Id.Equals(userId)).ProfilePictureUrl;
+            string imagePath = _context.Users?.FirstOrDefault(e => e.Id.Equals(userId))?.ProfilePictureUrl!;
             if (string.IsNullOrEmpty(imagePath))
             {
-                return null;
+                return null!;
             }
             else
                 return imagePath;
