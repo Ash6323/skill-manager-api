@@ -1,4 +1,5 @@
 ﻿using EmployeeSkillManager.Data.DTOs;
+using EmployeeSkillManager.Data.Enums;
 using EmployeeSkillManager.Services.Interfaces;
 
 namespace EmployeeSkillManager.Services.Services
@@ -14,6 +15,7 @@ namespace EmployeeSkillManager.Services.Services
         {
             EmployeeSkillDTO detail = _employeeSkillService.GetEmployeeSkills(id);
             List<SkillExpertiseDTO> SortedList = detail.EmployeeSkills.OrderBy(o => o.Expertise).ToList();
+            List<string> expertises = Enum.GetNames(typeof(Expertise)).ToList();
             detail.EmployeeSkills = SortedList;
 
             string htmlcontent = "<div style='width:100%; text-align:center'>";
@@ -38,7 +40,7 @@ namespace EmployeeSkillManager.Services.Services
                     htmlcontent += "<tr>";
                     htmlcontent += "<td>" + i + "</td >";
                     htmlcontent += "<td>" + item.SkillName + "</td>";
-                    htmlcontent += "<td> " + item.Expertise + "</td >";
+                    htmlcontent += "<td> " + expertises[item.Expertise] + "</td >";
                     htmlcontent += "</tr>";
                     i++;
                 });

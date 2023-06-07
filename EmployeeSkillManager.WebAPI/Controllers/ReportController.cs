@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 namespace EmployeeSkillManager.WebAPI.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize(Roles = "Admin, Employee")]
     [ApiController]
     public class ReportController : ControllerBase
     {
@@ -21,7 +22,6 @@ namespace EmployeeSkillManager.WebAPI.Controllers
         }
 
         [HttpGet("{id}")]
-        [Authorize(Roles = "Admin")]
         public IActionResult GeneratePDF(string id)
         {
             try
