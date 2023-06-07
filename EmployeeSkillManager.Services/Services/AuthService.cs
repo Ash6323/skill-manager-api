@@ -90,7 +90,7 @@ namespace EmployeeSkillManager.Services.Services
                 {
                     Id = user.Id,
                     Gender = inputModel.Gender,
-                    IsActive = 1
+                    IsActive = true
                 };
                 _dbContext.Admins.Add(newAdmin);
                 await _dbContext.SaveChangesAsync();
@@ -152,7 +152,7 @@ namespace EmployeeSkillManager.Services.Services
                 {
                     Id = user.Id,
                     Gender = inputModel.Gender,
-                    IsActive = 1,
+                    IsActive = true,
                 };
                 _dbContext.Employees.Add(newEmployee);
                 await _dbContext.SaveChangesAsync();

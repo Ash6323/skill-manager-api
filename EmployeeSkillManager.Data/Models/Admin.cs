@@ -8,6 +8,6 @@ namespace EmployeeSkillManager.Data.Models
         public string Id { get; set; }
         public User User { get; set; }
         public string Gender { get; set; }
-        public int IsActive { get; set; }
+        public bool IsActive { get; set; }
     }
 }

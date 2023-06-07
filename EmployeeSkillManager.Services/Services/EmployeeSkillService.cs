@@ -15,7 +15,7 @@ namespace EmployeeSkillManager.Services.Services
         public List<EmployeeSkillDTO> GetAllEmployeeSkills()
         {
             List<EmployeeSkillDTO> employeeSkills = (from e in _context.Employees
-                                                     where e.IsActive.Equals(1)
+                                                     where e.IsActive.Equals(true)
                                                      select new EmployeeSkillDTO
                                                      {
                                                          EmployeeId = e.Id,
@@ -34,7 +34,7 @@ namespace EmployeeSkillManager.Services.Services
         public EmployeeSkillDTO GetEmployeeSkills(string id)
         {
             EmployeeSkillDTO employeeSkills = (from e in _context.Employees 
-                                      where e.IsActive.Equals(1)
+                                      where e.IsActive.Equals(true)
                                       select new EmployeeSkillDTO
                                       {
                                           EmployeeId = e.Id,

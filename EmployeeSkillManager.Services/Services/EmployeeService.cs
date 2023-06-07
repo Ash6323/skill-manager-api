@@ -17,13 +17,13 @@ namespace EmployeeSkillManager.Services.Services
         }
         public List<UserDTO> GetEmployees()
         {
-            List<Employee> employees = _dbContext.Employees.Include(e => e.User).Where(e=> e.IsActive.Equals(1)).ToList();
+            List<Employee> employees = _dbContext.Employees.Include(e => e.User).Where(e=> e.IsActive.Equals(true)).ToList();
             return employees.Select(e => new EmployeeUserMapper().Map(e)).ToList();
         }
         public UserDTO GetEmployee(string id)
         {
             Employee result = _dbContext.Employees.Include(e => e.User)
-                                                  .FirstOrDefault(e => e.Id.Equals(id) && e.IsActive.Equals(1))!;
+                                                  .FirstOrDefault(e => e.Id.Equals(id) && e.IsActive.Equals(true))!;
             if (result != null)
             {
                 UserDTO employee = new EmployeeUserMapper().Map(result);
@@ -34,7 +34,7 @@ namespace EmployeeSkillManager.Services.Services
         public string UpdateEmployee(string id, EmployeeUpdateDTO updatedEmployee)
         {
             Employee employee = _dbContext.Employees.Include(e => e.User)
-                                                    .FirstOrDefault(e => e.Id.Equals(id) && e.IsActive.Equals(1))!;
+                                                    .FirstOrDefault(e => e.Id.Equals(id) && e.IsActive.Equals(true))!;
 
             if (employee != null)
             {
@@ -92,11 +92,11 @@ namespace EmployeeSkillManager.Services.Services
         public string DeleteEmployee(string id)
         {
             Employee employee = _dbContext.Employees.Include(e => e.User)
-                                                    .FirstOrDefault(e => e.Id.Equals(id) && e.IsActive.Equals(1))!;
+                                                    .FirstOrDefault(e => e.Id.Equals(id) && e.IsActive.Equals(true))!;
             
             if (employee != null)
             {
-                employee.IsActive = 0;
+                employee.IsActive = false;
                 _dbContext.SaveChanges();
                 return employee.User.Id;
             }

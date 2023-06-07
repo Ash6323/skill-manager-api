@@ -11,7 +11,7 @@ namespace EmployeeSkillManager.Data.Models
         public string Description { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
-        public int IsActive { get; set; }
+        public bool IsActive { get; set; }
         public ICollection<Employee> Employees { get; set; }
         public ICollection<EmployeeSkill> EmployeeSkills { get; set; }
     }

@@ -17,12 +17,12 @@ namespace EmployeeSkillManager.Services.Services
 
         public List<UserDTO> GetAdmins()
         {
-            List<Admin> admins = _dbContext.Admins.Include(a => a.User).Where(e => e.IsActive.Equals(1)).ToList();
+            List<Admin> admins = _dbContext.Admins.Include(a => a.User).Where(e => e.IsActive.Equals(true)).ToList();
             return admins.Select(a => new AdminUserMapper().Map(a)).ToList();
         }
         public UserDTO GetAdmin(string id)
         {
-            Admin result = _dbContext.Admins.Include(e => e.User).FirstOrDefault(e => e.Id.Equals(id) && e.IsActive.Equals(1))!;
+            Admin result = _dbContext.Admins.Include(e => e.User).FirstOrDefault(e => e.Id.Equals(id) && e.IsActive.Equals(true))!;
             if (result != null)
             {
                 UserDTO admin = new AdminUserMapper().Map(result);
@@ -97,11 +97,11 @@ namespace EmployeeSkillManager.Services.Services
         public string DeleteAdmin(string id)
         {
             Admin admin = _dbContext.Admins.Include(a => a.User)
-                                                    .FirstOrDefault(a => a.Id.Equals(id) && a.IsActive.Equals(1))!;
+                                                    .FirstOrDefault(a => a.Id.Equals(id) && a.IsActive.Equals(true))!;
 
             if (admin != null)
             {
-                admin.IsActive = 0;
+                admin.IsActive = false;
                 _dbContext.SaveChanges();
                 return admin.User.Id;
             }

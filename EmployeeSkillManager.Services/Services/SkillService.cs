@@ -15,7 +15,7 @@ namespace EmployeeSkillManager.Services.Services
         }
         public List<SkillDTO> GetSkills()
         {
-            IQueryable<SkillDTO> skills = from s in _context.Skills where s.IsActive.Equals(1)
+            IQueryable<SkillDTO> skills = from s in _context.Skills where s.IsActive.Equals(true)
                                         select new SkillDTO()
                                         {
                                             Id = s.Id,
@@ -27,7 +27,7 @@ namespace EmployeeSkillManager.Services.Services
         public SkillDTO GetSkill(int id)
         {
             SkillDTO skill = (from s in _context.Skills
-                              where s.Id == id && s.IsActive.Equals(1)
+                              where s.Id == id && s.IsActive.Equals(true)
                               select new SkillDTO()
                               {
                                   Id = s.Id,
@@ -44,7 +44,7 @@ namespace EmployeeSkillManager.Services.Services
                 newSkill.Description = skill.Description;
                 newSkill.CreatedAt = DateTime.UtcNow;
                 newSkill.UpdatedAt = DateTime.UtcNow;
-                newSkill.IsActive = 1;
+                newSkill.IsActive = true;
             };
             _context.Skills.Add(newSkill);
             _context.SaveChanges();
@@ -56,7 +56,7 @@ namespace EmployeeSkillManager.Services.Services
             if (string.IsNullOrEmpty(duplicateSkill))
                 return 1;
 
-            Skill skill = _context.Skills.FirstOrDefault(s => s.Id.Equals(id) && s.IsActive.Equals(1))!;
+            Skill skill = _context.Skills.FirstOrDefault(s => s.Id.Equals(id) && s.IsActive.Equals(true))!;
 
             if (skill != null)
             {
@@ -79,7 +79,7 @@ namespace EmployeeSkillManager.Services.Services
             Skill skill = _context.Skills.FirstOrDefault(s => s.Id.Equals(id))!;
             if (skill != null)
             {
-                skill.IsActive = 0;
+                skill.IsActive = false;
                 _context.SaveChanges();
                 return skill.Id;
             }
