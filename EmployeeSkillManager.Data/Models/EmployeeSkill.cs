@@ -10,7 +10,7 @@ namespace EmployeeSkillManager.Data.Models
         [ForeignKey("Skill")]
         public int SkillId { get; set; }
         [Required]
-        public string Expertise { get; set; }
+        public int Expertise { get; set; }
         public DateTime AddedAt { get; set; }
         public DateTime? RemovedAt { get; set; }
         public Employee Employee { get; set; } = null!;

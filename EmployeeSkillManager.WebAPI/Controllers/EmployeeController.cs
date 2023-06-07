@@ -42,7 +42,7 @@ namespace EmployeeSkillManager.WebAPI.Controllers
         }
 
         [HttpGet("{id}")]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin, Employee")]
         public IActionResult Get(string id)
         {
             try

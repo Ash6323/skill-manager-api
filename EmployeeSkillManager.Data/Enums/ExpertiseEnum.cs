@@ -2,10 +2,10 @@
 {
     public enum Expertise
     {
-        Basic,
-        Novice,
-        Intermediate,
-        Advanced,
-        Expert
+        Basic = 0,
+        Novice = 1,
+        Intermediate = 2,
+        Advanced = 3,
+        Expert = 4
     }
 }

@@ -51,7 +51,7 @@ namespace EmployeeSkillManager.Services.Services
             return employeeSkills;
         }
         public int AddEmployeeSkill(EmployeeAddSkillDTO employeeSkill)
-            {
+        {
             if(employeeSkill.SkillId.Equals(0) || employeeSkill.EmployeeId.Equals("") || employeeSkill.Expertise.Equals("")) 
             {
                 return 1;
@@ -79,7 +79,7 @@ namespace EmployeeSkillManager.Services.Services
         public int UpdateEmployeeSkill(EmployeeSkillUpdateDTO employeeSkill)
         {
             EmployeeSkill skill = _context.EmployeeSkills
-                                        .FirstOrDefault(x => x.EmployeeId.Equals(employeeSkill.EmployeeId) 
+                                        .FirstOrDefault(x => x.EmployeeId.Equals(employeeSkill.EmployeeId)
                                                         && x.SkillId.Equals(employeeSkill.SkillId))!;
             if(skill == null)
             {
