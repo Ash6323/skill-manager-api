@@ -18,7 +18,6 @@ namespace EmployeeSkillManager.Services.Services
         }
         public async Task<int> UploadImage([FromForm] ProfileImageUploadDTO imageEntity)
         {
-
             if (imageEntity.Image.FileName == null || imageEntity.Image.FileName.Length == 0)
             {
                 return 0;
@@ -46,13 +45,13 @@ namespace EmployeeSkillManager.Services.Services
             }
             else
             {
+
                 imageData.ImagePath = databaseImagePath;
             }
 
             User user = _context.Users.FirstOrDefault(e => e.Id.Equals(imageEntity.UserId))!;
             user.ProfilePictureUrl = databaseImagePath;
             _context.SaveChanges();
-
             return 1;
         }
         public string GetImage(string userId)

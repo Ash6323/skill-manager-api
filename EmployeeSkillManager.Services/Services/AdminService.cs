@@ -3,6 +3,7 @@ using EmployeeSkillManager.Data.DTOs;
 using EmployeeSkillManager.Data.Mappers;
 using EmployeeSkillManager.Data.Models;
 using EmployeeSkillManager.Services.Interfaces;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 
 namespace EmployeeSkillManager.Services.Services
@@ -10,9 +11,11 @@ namespace EmployeeSkillManager.Services.Services
     public class AdminService : IAdminService
     {
         private readonly ApplicationDbContext _dbContext;
-        public AdminService(ApplicationDbContext dbContext)
+        private readonly IWebHostEnvironment _environment;
+        public AdminService(ApplicationDbContext dbContext, IWebHostEnvironment environment)
         {
             _dbContext = dbContext;
+            _environment = environment;
         }
 
         public List<UserDTO> GetAdmins()
@@ -25,6 +28,15 @@ namespace EmployeeSkillManager.Services.Services
             Admin result = _dbContext.Admins.Include(e => e.User).FirstOrDefault(e => e.Id.Equals(id) && e.IsActive.Equals(true))!;
             if (result != null)
             {
+                if (result.User.ProfilePictureUrl != null)
+                {
+                    string imagePath = _environment.WebRootPath + result.User.ProfilePictureUrl;
+                    if (!File.Exists(imagePath))
+                    {
+                        result.User.ProfilePictureUrl = null;
+                        _dbContext.SaveChanges();
+                    }
+                }
                 UserDTO admin = new AdminUserMapper().Map(result);
                 return admin;
             }

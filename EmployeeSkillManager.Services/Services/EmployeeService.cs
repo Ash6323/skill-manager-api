@@ -4,6 +4,7 @@ using EmployeeSkillManager.Data.Enums;
 using EmployeeSkillManager.Data.Mappers;
 using EmployeeSkillManager.Data.Models;
 using EmployeeSkillManager.Services.Interfaces;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 
 namespace EmployeeSkillManager.Services.Services
@@ -11,9 +12,11 @@ namespace EmployeeSkillManager.Services.Services
     public class EmployeeService : IEmployeeService
     {
         private readonly ApplicationDbContext _dbContext;
-        public EmployeeService(ApplicationDbContext dbContext)
+        private readonly IWebHostEnvironment _environment;
+        public EmployeeService(ApplicationDbContext dbContext, IWebHostEnvironment environment)
         {
             _dbContext = dbContext;
+            _environment = environment;
         }
         public List<UserDTO> GetEmployees()
         {
@@ -26,6 +29,15 @@ namespace EmployeeSkillManager.Services.Services
                                                   .FirstOrDefault(e => e.Id.Equals(id) && e.IsActive.Equals(true))!;
             if (result != null)
             {
+                if (result.User.ProfilePictureUrl != null)
+                {
+                    string imagePath = _environment.WebRootPath + result.User.ProfilePictureUrl;
+                    if (!File.Exists(imagePath))
+                    {
+                        result.User.ProfilePictureUrl = null;
+                        _dbContext.SaveChanges();
+                    }
+                }
                 UserDTO employee = new EmployeeUserMapper().Map(result);
                 return employee;
             }
