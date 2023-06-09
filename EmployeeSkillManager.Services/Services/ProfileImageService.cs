@@ -45,24 +45,32 @@ namespace EmployeeSkillManager.Services.Services
             }
             else
             {
-
+                File.Delete(_environment.WebRootPath + imageData.ImagePath);
                 imageData.ImagePath = databaseImagePath;
             }
-
-            User user = _context.Users.FirstOrDefault(e => e.Id.Equals(imageEntity.UserId))!;
-            user.ProfilePictureUrl = databaseImagePath;
             _context.SaveChanges();
             return 1;
         }
         public string GetImage(string userId)
         {
-            string imagePath = _context.Users?.FirstOrDefault(e => e.Id.Equals(userId))?.ProfilePictureUrl!;
+            string imagePath = _context.ProfileImages.FirstOrDefault(e => e.UserId.Equals(userId))!.ImagePath!;
             if (string.IsNullOrEmpty(imagePath))
             {
                 return null!;
             }
             else
                 return imagePath;
+        }
+        public int DeleteImage(string userId)
+        {
+            ProfileImage imageData = _context.ProfileImages.FirstOrDefault(e => e.UserId.Equals(userId))!;
+            if (imageData != null)
+            {
+                File.Delete(_environment.WebRootPath + imageData.ImagePath);
+                _context.Remove(imageData);
+                _context.SaveChanges();
+            }
+            return 0;
         }
     }
 }

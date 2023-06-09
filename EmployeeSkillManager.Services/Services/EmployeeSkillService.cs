@@ -90,5 +90,19 @@ namespace EmployeeSkillManager.Services.Services
             _context.SaveChanges();
             return skill.SkillId;
         }
+        public int DeleteEmployeeSkill(string employeeId, int skillId)
+        {
+            EmployeeSkill skill = _context.EmployeeSkills
+                                        .FirstOrDefault(x => x.EmployeeId.Equals(employeeId)
+                                                        && x.SkillId.Equals(skillId))!;
+            if (skill == null)
+            {
+                return 0;
+            }
+
+            _context.Remove(skill);
+            _context.SaveChanges();
+            return skill.SkillId;
+        }
     }
 }

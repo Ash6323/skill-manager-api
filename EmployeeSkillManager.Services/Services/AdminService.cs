@@ -3,7 +3,6 @@ using EmployeeSkillManager.Data.DTOs;
 using EmployeeSkillManager.Data.Mappers;
 using EmployeeSkillManager.Data.Models;
 using EmployeeSkillManager.Services.Interfaces;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 
 namespace EmployeeSkillManager.Services.Services
@@ -11,11 +10,9 @@ namespace EmployeeSkillManager.Services.Services
     public class AdminService : IAdminService
     {
         private readonly ApplicationDbContext _dbContext;
-        private readonly IWebHostEnvironment _environment;
-        public AdminService(ApplicationDbContext dbContext, IWebHostEnvironment environment)
+        public AdminService(ApplicationDbContext dbContext)
         {
             _dbContext = dbContext;
-            _environment = environment;
         }
 
         public List<UserDTO> GetAdmins()
@@ -25,19 +22,13 @@ namespace EmployeeSkillManager.Services.Services
         }
         public UserDTO GetAdmin(string id)
         {
-            Admin result = _dbContext.Admins.Include(e => e.User).FirstOrDefault(e => e.Id.Equals(id) && e.IsActive.Equals(true))!;
+            Admin result = _dbContext.Admins.Include(e => e.User)
+                                            .FirstOrDefault(e => e.Id.Equals(id) && e.IsActive.Equals(true))!;
             if (result != null)
             {
-                if (result.User.ProfilePictureUrl != null)
-                {
-                    string imagePath = _environment.WebRootPath + result.User.ProfilePictureUrl;
-                    if (!File.Exists(imagePath))
-                    {
-                        result.User.ProfilePictureUrl = null;
-                        _dbContext.SaveChanges();
-                    }
-                }
                 UserDTO admin = new AdminUserMapper().Map(result);
+                admin.ProfilePictureUrl = _dbContext.ProfileImages.FirstOrDefault(e => e.UserId == id)?.ImagePath!;
+                _dbContext.SaveChanges();
                 return admin;
             }
             return null;
@@ -90,7 +81,6 @@ namespace EmployeeSkillManager.Services.Services
                 admin.User.LastName = updatedAdmin.LastName;
                 admin.User.Email = updatedAdmin.Email;
                 admin.User.PhoneNumber = updatedAdmin.PhoneNumber;
-                admin.User.ProfilePictureUrl = updatedAdmin.ProfilePictureUrl;
                 admin.Gender = updatedAdmin.Gender;
                 admin.User.Street = updatedAdmin.Street;
                 admin.User.Town = updatedAdmin.Town;

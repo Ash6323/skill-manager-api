@@ -88,7 +88,6 @@ namespace EmployeeSkillManager.Services.Services
         }
         public List<string> GetExpertiseEnum()
         {
-            //List<int> expertises = Enum.GetValues(typeof(Expertise)).Cast<int>().ToList();
             List<string> expertises = Enum.GetNames(typeof(Expertise)).ToList();
             return expertises;
         }

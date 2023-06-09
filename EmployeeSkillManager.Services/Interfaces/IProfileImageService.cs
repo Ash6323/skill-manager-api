@@ -6,5 +6,6 @@ namespace EmployeeSkillManager.Services.Interfaces
     {
         Task<int> UploadImage(ProfileImageUploadDTO imageEntity);
         string GetImage(string userId);
+        int DeleteImage(string userId);
     }
 }

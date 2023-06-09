@@ -16,6 +16,6 @@ namespace EmployeeSkillManager.Data.Models
         public IFormFile Image { get; set; }
 
         [JsonIgnore]
-        public string ImagePath { get; set; }
+        public string? ImagePath { get; set; }
     }
 }

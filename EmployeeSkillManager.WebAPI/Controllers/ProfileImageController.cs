@@ -2,11 +2,14 @@
 using EmployeeSkillManager.Data.DTOs;
 using EmployeeSkillManager.Data.Models;
 using EmployeeSkillManager.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Data;
 
 namespace EmployeeSkillManager.WebAPI.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize(Roles = "Admin, Employee")]
     [ApiController]
     public class ProfileImageController : ControllerBase
     {
@@ -36,7 +39,7 @@ namespace EmployeeSkillManager.WebAPI.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, response);
             }
         }
-        [HttpGet]
+        [HttpGet("{id}")]
         public IActionResult Get(string id)
         {
             try
@@ -49,6 +52,28 @@ namespace EmployeeSkillManager.WebAPI.Controllers
                 Response response = new
                             Response(StatusCodes.Status200OK, ConstantMessages.DataRetrievedSuccessfully, result);
                 return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                Response response = new Response
+                    (StatusCodes.Status500InternalServerError, ConstantMessages.ErrorOccurred, ex.Message);
+                return StatusCode(StatusCodes.Status500InternalServerError, response);
+            }
+        }
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(string id)
+        {
+            try
+            {
+                int result =  _profileImageService.DeleteImage(id);
+                if (result.Equals(0))
+                {
+                    Response response = new Response
+                                        (StatusCodes.Status200OK, 
+                                        ConstantMessages.DataDeletedSuccessfully, ConstantMessages.DataDeletedSuccessfully);
+                    return Ok(response);   
+                }
+                return BadRequest(new Response(StatusCodes.Status400BadRequest, ConstantMessages.ErrorOccurred, null));
             }
             catch (Exception ex)
             {

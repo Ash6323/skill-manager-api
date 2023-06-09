@@ -15,7 +15,6 @@ namespace EmployeeSkillManager.Data.Mappers
                 Gender = entity.Gender,
                 PhoneNumber = entity.User.PhoneNumber,
                 Email = entity.User.Email,
-                ProfilePictureUrl = entity.User.ProfilePictureUrl,
                 IsActive = entity.IsActive,
                 DateOfBirth = entity.User.DateOfBirth,
                 Street = entity.User.Street,

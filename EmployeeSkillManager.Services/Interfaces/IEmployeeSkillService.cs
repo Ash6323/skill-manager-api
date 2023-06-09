@@ -8,5 +8,6 @@ namespace EmployeeSkillManager.Services.Interfaces
         EmployeeSkillDTO GetEmployeeSkills(string id);
         int AddEmployeeSkill(EmployeeAddSkillDTO employeeSkill);
         int UpdateEmployeeSkill(EmployeeSkillUpdateDTO employeeSkill);
+        int DeleteEmployeeSkill(string employeeId, int skillId);
     }
 }

@@ -12,7 +12,6 @@ namespace EmployeeSkillManager.Data.Models
         [MaxLength(50, ErrorMessage = "Last name cannot be longer than 50 characters.")]
         public string LastName { get; set; }
         public string FullName { get { return FirstName + " " + LastName; } }
-        public string? ProfilePictureUrl { get; set; }
         public ProfileImage ProfileImages { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }

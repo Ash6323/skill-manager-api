@@ -12,11 +12,9 @@ namespace EmployeeSkillManager.Services.Services
     public class EmployeeService : IEmployeeService
     {
         private readonly ApplicationDbContext _dbContext;
-        private readonly IWebHostEnvironment _environment;
-        public EmployeeService(ApplicationDbContext dbContext, IWebHostEnvironment environment)
+        public EmployeeService(ApplicationDbContext dbContext)
         {
             _dbContext = dbContext;
-            _environment = environment;
         }
         public List<UserDTO> GetEmployees()
         {
@@ -29,16 +27,9 @@ namespace EmployeeSkillManager.Services.Services
                                                   .FirstOrDefault(e => e.Id.Equals(id) && e.IsActive.Equals(true))!;
             if (result != null)
             {
-                if (result.User.ProfilePictureUrl != null)
-                {
-                    string imagePath = _environment.WebRootPath + result.User.ProfilePictureUrl;
-                    if (!File.Exists(imagePath))
-                    {
-                        result.User.ProfilePictureUrl = null;
-                        _dbContext.SaveChanges();
-                    }
-                }
                 UserDTO employee = new EmployeeUserMapper().Map(result);
+                employee.ProfilePictureUrl = _dbContext.ProfileImages.FirstOrDefault(e => e.UserId == id)?.ImagePath!;
+                _dbContext.SaveChanges();
                 return employee;
             }
             return null;
@@ -87,7 +78,6 @@ namespace EmployeeSkillManager.Services.Services
                 employee.User.LastName = updatedEmployee.LastName;
                 employee.User.Email = updatedEmployee.Email;
                 employee.User.PhoneNumber = updatedEmployee.PhoneNumber;
-                employee.User.ProfilePictureUrl = updatedEmployee.ProfilePictureUrl;
                 employee.Gender = updatedEmployee.Gender;
                 employee.User.Street = updatedEmployee.Street;
                 employee.User.Town = updatedEmployee.Town;
