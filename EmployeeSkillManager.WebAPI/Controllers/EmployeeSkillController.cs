@@ -124,5 +124,31 @@ namespace EmployeeSkillManager.WebAPI.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, response);
             }
         }
+        // DELETE api/<EmployeeSkillController>/5
+        [HttpDelete("{employeeId}/{skillId}")]
+        [Authorize(Roles = "Admin")]
+        public IActionResult Delete(string employeeId, int skillId)
+        {
+            try
+            {
+                int result = _employeeSkillService.DeleteEmployeeSkill(employeeId, skillId);
+
+                if (result.Equals(0))
+                {
+                    Response invalidResponse = new(StatusCodes.Status400BadRequest, ConstantMessages.SkillNotFound, null);
+                    return BadRequest(invalidResponse);
+                }
+                Response response = new Response
+                    (StatusCodes.Status200OK, ConstantMessages.DataDeletedSuccessfully, 
+                                                ConstantMessages.DataDeletedSuccessfully);
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                Response response = new Response
+                    (StatusCodes.Status500InternalServerError, ConstantMessages.ErrorOccurred, ex.Message);
+                return StatusCode(StatusCodes.Status500InternalServerError, response);
+            }
+        }
     }
 }
