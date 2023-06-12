@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EmployeeSkillManager.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230607070828_MigrationV13")]
-    partial class MigrationV13
+    [Migration("20230612062956_Initial_Azure")]
+    partial class Initial_Azure
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -93,7 +93,6 @@ namespace EmployeeSkillManager.Data.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("ImagePath")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("UserId");
@@ -200,9 +199,6 @@ namespace EmployeeSkillManager.Data.Migrations
 
                     b.Property<string>("PreviousOrganisation")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ProfilePictureUrl")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("SecurityStamp")
