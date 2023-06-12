@@ -19,7 +19,7 @@ namespace EmployeeSkillManager.WebAPI.Controllers
 
         [HttpPost]
         [Route("AdminRegistration")]
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> AdminRegistration([FromBody] UserRegistrationDTO inputModel)
         {
             try
