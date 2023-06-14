@@ -98,7 +98,7 @@ namespace EmployeeSkillManager.WebAPI.Controllers
                         (StatusCodes.Status404NotFound, ConstantMessages.SkillNotFound, ConstantMessages.SkillNotFound);
                     return NotFound(response);
                 }
-                if (result.Equals(1))
+                if (result.Equals(-1))
                 {
                     Response response = new
                         (StatusCodes.Status404NotFound, ConstantMessages.SkillAlreadyExists, ConstantMessages.SkillAlreadyExists);

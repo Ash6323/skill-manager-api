@@ -54,7 +54,7 @@ namespace EmployeeSkillManager.Services.Services
         {
             string duplicateSkill = _context.Skills.Select(s => s.SkillName).Where(s => s.Equals(updatedSkill.SkillName)).ToString()!;
             if (string.IsNullOrEmpty(duplicateSkill))
-                return 1;
+                return -1;
 
             Skill skill = _context.Skills.FirstOrDefault(s => s.Id.Equals(id) && s.IsActive.Equals(true))!;
 
