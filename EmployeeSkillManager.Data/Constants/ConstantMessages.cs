@@ -17,5 +17,8 @@
         public static string InvalidDetails = "Entered Details are invalid. Please Try Again.";
         public static string UploadSuccessful = "Image Upload Successful";
         public static string ImageNotFound = "Image Not Found";
+        public static string InvalidRequest = "Invalid Client Request";
+        public static string InvalidToken = "Invalid Access Token or Refresh Token";
+        public static string TokenGenerated = "Refresh Token Generation Successful";
     }
 }

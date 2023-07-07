@@ -8,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace EmployeeSkillManager.Services.Services
@@ -26,14 +27,14 @@ namespace EmployeeSkillManager.Services.Services
             _roleManager = roleManager;
             _dbContext = dbContext;
         }
-        public JwtSecurityToken GetToken(List<Claim> authClaim)
+        public async Task<JwtSecurityToken> GetToken(List<Claim> authClaim)
         {
             var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JwtConfig:secret"]));
 
             JwtSecurityToken token = new JwtSecurityToken(
                 issuer: _configuration["JwtConfig:validIssuer"],
                 audience: _configuration["JwtConfig:validAudience"],
-                expires: DateTime.UtcNow.AddHours(1),
+                expires: DateTime.Now.AddMinutes(1),
                 claims: authClaim,
                 signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
                 );
@@ -172,7 +173,7 @@ namespace EmployeeSkillManager.Services.Services
             if (user != null && await _userManager.CheckPasswordAsync(user, loginModel.Password))
             {
                 IList<string> userRoles = await _userManager.GetRolesAsync(user);
-                string userRole = userRoles.FirstOrDefault();
+                string userRole = userRoles.FirstOrDefault()!;
 
                 List<Claim> authClaims = new List<Claim>
                 {
@@ -180,11 +181,12 @@ namespace EmployeeSkillManager.Services.Services
                     new Claim(ClaimTypes.Role, userRole)
                 };
 
-                JwtSecurityToken token = GetToken(authClaims);
+                JwtSecurityToken token = await GetToken(authClaims);
 
                 return new AuthBody
                 {
                     Token = new JwtSecurityTokenHandler().WriteToken(token),
+                    RefreshToken = await GenerateRefreshToken(),
                     Expiration = token.ValidTo,
                     Role = userRole,
                     UserId = user.Id,
@@ -192,6 +194,33 @@ namespace EmployeeSkillManager.Services.Services
                 };
             }
             return null;
+        }
+        public async Task<string> GenerateRefreshToken()
+        {
+            byte[] randomNumber = new byte[64];
+            RandomNumberGenerator randomNumberGenerator = RandomNumberGenerator.Create();
+            randomNumberGenerator.GetBytes(randomNumber);
+            return Convert.ToBase64String(randomNumber);
+        }
+
+        public async Task<ClaimsPrincipal> GetPrincipalFromExpiredToken(string token)
+        {
+            TokenValidationParameters tokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateAudience = false,
+                ValidateIssuer = false,
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JwtConfig:secret"])),
+                ValidateLifetime = false
+            };
+            JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
+            ClaimsPrincipal principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out SecurityToken securityToken);
+            
+            if (securityToken is not JwtSecurityToken jwtSecurityToken || 
+                        !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase))
+                throw new SecurityTokenException("Invalid Token");
+
+            return principal;
         }
     }
 }

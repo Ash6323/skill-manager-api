@@ -7,9 +7,11 @@ namespace EmployeeSkillManager.Services.Interfaces
 {
     public interface IAuthService
     {
-        JwtSecurityToken GetToken(List<Claim> authClaim);
+        Task<JwtSecurityToken> GetToken(List<Claim> authClaim);
         Task<string> RegisterAdmin(UserRegistrationDTO inputModel);
         Task<AuthBody> LoginAuth(UserLoginDTO loginModel);
         Task<string> RegisterEmployee(UserRegistrationDTO inputModel);
+        public Task<ClaimsPrincipal> GetPrincipalFromExpiredToken(string token);
+        public Task<string> GenerateRefreshToken();
     }
 }
